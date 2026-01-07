@@ -2,10 +2,47 @@
  * ╔═══════════════════════════════════════════════════════════════════════════════╗
  * ║     ੴ GURBANI RADIO - ULTRA PREMIUM EDITION v6.0 ੴ                          ║
  * ║     Enhanced Design - Audio Backend Preserved                                 ║
+ * ║     MOBILE OPTIMIZED VERSION                                                  ║
  * ╚═══════════════════════════════════════════════════════════════════════════════╝
  */
 
 'use strict';
+
+/* ═══════════════════════════════════════════════════════════════════════
+   MOBILE PERFORMANCE SYSTEM - ENHANCED VERSION
+   ═══════════════════════════════════════════════════════════════════════ */
+
+// Detect mobile device
+const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) 
+                 || window.innerWidth < 768;
+
+// Detect slow device (low memory or old phone)
+const isSlowDevice = navigator.deviceMemory ? navigator.deviceMemory < 4 : isMobile;
+
+// Detect if user prefers reduced motion
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// Should we disable heavy features?
+const shouldReduceAnimations = isMobile || isSlowDevice || prefersReducedMotion;
+
+// Update intervals - SLOWER on mobile
+const UPDATE_INTERVAL = isMobile ? 2000 : 500;
+const VISUALIZER_THROTTLE = isMobile ? 100 : 16;  // 10fps on mobile, 60fps on desktop
+const PARTICLE_COUNT = isMobile ? 10 : 40;        // Fewer particles on mobile
+
+console.log(`📱 Device: ${isMobile ? 'Mobile' : 'Desktop'}`);
+console.log(`⚡ Performance mode: ${shouldReduceAnimations ? 'POWER SAVING' : 'FULL'}`);
+
+// Apply mobile class immediately
+if (isMobile) {
+    document.documentElement.classList.add('is-mobile');
+    document.body.classList.add('mobile-device');
+}
+
+// Disable animations if needed
+if (shouldReduceAnimations) {
+    document.documentElement.classList.add('reduce-motion');
+}
 
 // ═══════════════════════════════════════════════════════════════
 // AUDIO CONFIG - UNTOUCHED (Keep your original)
@@ -191,7 +228,18 @@ const Utils = {
     },
 
     // NEW: Enhanced animation helpers
+    // NEW: Enhanced animation helpers
     createRipple(element, event) {
+        // ═══ DISABLE RIPPLE ON MOBILE ═══
+        if (isMobile) {
+            // Just do a simple opacity flash instead
+            element.style.opacity = '0.7';
+            setTimeout(() => {
+                element.style.opacity = '1';
+            }, 150);
+            return;
+        }
+        
         const ripple = document.createElement('span');
         ripple.className = 'ripple-effect';
         
@@ -999,6 +1047,9 @@ class AudioEngine extends EventEmitter {
 // ═══════════════════════════════════════════════════════════════════════════════
 // ENHANCED VISUALIZER ENGINE
 // ═══════════════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════════════════
+// ENHANCED VISUALIZER ENGINE - MOBILE OPTIMIZED
+// ═══════════════════════════════════════════════════════════════════════════════
 
 class VisualizerEngine {
     constructor(audioEngine, options = {}) {
@@ -1021,6 +1072,11 @@ class VisualizerEngine {
         this.lastBeat = 0;
         this.beatCooldown = 120;
         this.colorPhase = 0;
+        
+        // ═══ MOBILE OPTIMIZATION ═══
+        this.lastAnimationTime = 0;
+        this.frameSkip = isMobile ? 3 : 0;  // Skip frames on mobile
+        this.frameCount = 0;
 
         this.init();
     }
@@ -1038,9 +1094,28 @@ class VisualizerEngine {
     }
 
     start() {
-        if (this.isActive || Utils.prefersReducedMotion()) return;
+        // ═══ DISABLE ON MOBILE IF REDUCED MOTION ═══
+        if (this.isActive || shouldReduceAnimations) {
+            // On mobile, just set static bars
+            if (shouldReduceAnimations) {
+                this.setStaticBars();
+            }
+            return;
+        }
+        
         this.isActive = true;
         this.animate();
+    }
+
+    // ═══ NEW: Static bars for mobile (no animation, no lag!) ═══
+    setStaticBars() {
+        this.bars.forEach((bar, index) => {
+            const height = this.options.minHeight + (index % 3) * 8;
+            bar.style.height = `${height}px`;
+            bar.style.transition = 'none';
+            bar.style.animation = 'none';
+            bar.style.boxShadow = '0 0 10px rgba(247, 198, 52, 0.3)';
+        });
     }
 
     stop() {
@@ -1050,7 +1125,7 @@ class VisualizerEngine {
             this.animationId = null;
         }
 
-        this.bars.forEach((bar, index) => {
+        this.bars.forEach((bar) => {
             bar.style.height = `${this.options.minHeight}px`;
             bar.style.boxShadow = 'none';
             bar.style.background = '';
@@ -1059,6 +1134,26 @@ class VisualizerEngine {
 
     animate() {
         if (!this.isActive) return;
+
+        // ═══ FRAME THROTTLING FOR MOBILE ═══
+        const now = performance.now();
+        
+        // Skip frames on mobile to reduce CPU usage
+        if (isMobile) {
+            this.frameCount++;
+            if (this.frameCount % (this.frameSkip + 1) !== 0) {
+                this.animationId = requestAnimationFrame(() => this.animate());
+                return;
+            }
+            
+            // Also limit by time (minimum 50ms between frames on mobile = 20fps max)
+            if (now - this.lastAnimationTime < 50) {
+                this.animationId = requestAnimationFrame(() => this.animate());
+                return;
+            }
+        }
+        
+        this.lastAnimationTime = now;
 
         const frequencyData = this.audioEngine.getFrequencyData();
         const dataLength = frequencyData.length;
@@ -1092,14 +1187,24 @@ class VisualizerEngine {
             
             bar.style.height = `${smoothedHeight}px`;
             
-            // Enhanced glow with color shift
-            const intensity = normalized * this.options.glowIntensity;
-            const hue = (40 + Math.sin(this.colorPhase + index * 0.3) * 15) % 360;
-            bar.style.boxShadow = `0 0 ${intensity * 25}px hsla(${hue}, 80%, 55%, ${intensity * 0.7})`;
-            bar.style.background = `linear-gradient(to top, hsl(${hue}, 70%, 45%), hsl(${hue + 10}, 80%, 60%))`;
+            // ═══ SIMPLER EFFECTS ON MOBILE ═══
+            if (isMobile) {
+                // Simple glow, no color shift (saves CPU)
+                bar.style.boxShadow = `0 0 ${normalized * 15}px rgba(247, 198, 52, 0.5)`;
+            } else {
+                // Full effects on desktop
+                const intensity = normalized * this.options.glowIntensity;
+                const hue = (40 + Math.sin(this.colorPhase + index * 0.3) * 15) % 360;
+                bar.style.boxShadow = `0 0 ${intensity * 25}px hsla(${hue}, 80%, 55%, ${intensity * 0.7})`;
+                bar.style.background = `linear-gradient(to top, hsl(${hue}, 70%, 45%), hsl(${hue + 10}, 80%, 60%))`;
+            }
         });
 
-        this.detectBeat();
+        // ═══ SKIP BEAT DETECTION ON MOBILE ═══
+        if (!isMobile) {
+            this.detectBeat();
+        }
+        
         this.animationId = requestAnimationFrame(() => this.animate());
     }
 
@@ -1116,20 +1221,22 @@ class VisualizerEngine {
     }
 
     onBeat(intensity) {
+        // ═══ SKIP BEAT EFFECTS ON MOBILE ═══
+        if (isMobile) return;
+        
         this.audioEngine.emit('beat', { intensity });
 
-        // Pulse sacred image on beat
         const sacredImage = document.querySelector('.sacred-image');
         const sacredFrame = document.querySelector('.sacred-frame');
         
-        if (sacredImage && !Utils.prefersReducedMotion()) {
+        if (sacredImage && !prefersReducedMotion) {
             sacredImage.style.transform = `scale(${1 + intensity * 0.05})`;
             setTimeout(() => {
                 sacredImage.style.transform = 'scale(1)';
             }, 120);
         }
 
-        if (sacredFrame && !Utils.prefersReducedMotion()) {
+        if (sacredFrame && !prefersReducedMotion) {
             sacredFrame.style.boxShadow = `0 0 ${50 + intensity * 30}px rgba(247, 198, 52, ${0.5 + intensity * 0.3})`;
             setTimeout(() => {
                 sacredFrame.style.boxShadow = '';
@@ -1151,6 +1258,9 @@ class VisualizerEngine {
 // ═══════════════════════════════════════════════════════════════════════════════
 // ENHANCED PARTICLE SYSTEM
 // ═══════════════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════════════════
+// ENHANCED PARTICLE SYSTEM - MOBILE OPTIMIZED
+// ═══════════════════════════════════════════════════════════════════════════════
 
 class ParticleSystem {
     constructor(container, options = {}) {
@@ -1158,20 +1268,28 @@ class ParticleSystem {
             ? document.getElementById(container) 
             : container;
         
+        // ═══ MOBILE: Use fewer particles ═══
+        const particleCount = isMobile ? 8 : (options.count || 40);
+        
         this.options = {
-            count: options.count || 40,
+            count: particleCount,
             colors: options.colors || ['#FFD700', '#FFA500', '#FF8C00', '#DAA520', '#F4E04D'],
-            minSize: options.minSize || 2,
-            maxSize: options.maxSize || 7,
-            minDuration: options.minDuration || 12,
-            maxDuration: options.maxDuration || 30,
-            glowEnabled: options.glowEnabled !== false,
+            minSize: isMobile ? 3 : (options.minSize || 2),  // Slightly larger on mobile (fewer but visible)
+            maxSize: isMobile ? 5 : (options.maxSize || 7),
+            minDuration: isMobile ? 20 : (options.minDuration || 12),  // Slower on mobile
+            maxDuration: isMobile ? 40 : (options.maxDuration || 30),
+            glowEnabled: isMobile ? false : (options.glowEnabled !== false),  // No glow on mobile
             ...options
         };
 
         this.particles = [];
         this.isActive = false;
-        this.animationFrame = null;
+
+        // ═══ COMPLETELY DISABLE ON VERY SLOW DEVICES ═══
+        if (shouldReduceAnimations) {
+            console.log('[Particles] Disabled for performance');
+            return;
+        }
 
         if (this.container) {
             this.init();
@@ -1179,6 +1297,8 @@ class ParticleSystem {
     }
 
     init() {
+        if (shouldReduceAnimations) return;
+        
         // Clear existing
         if (this.container) {
             this.container.innerHTML = '';
@@ -1193,6 +1313,8 @@ class ParticleSystem {
     }
 
     createParticle() {
+        if (shouldReduceAnimations) return;
+        
         const particle = document.createElement('div');
         particle.className = 'floating-particle';
         
@@ -1203,20 +1325,24 @@ class ParticleSystem {
         const drift = Utils.random(-30, 30);
         const color = this.options.colors[Math.floor(Math.random() * this.options.colors.length)];
 
+        // ═══ SIMPLER STYLES ON MOBILE ═══
+        const boxShadow = this.options.glowEnabled ? `0 0 ${size * 3}px ${color}` : 'none';
+        
         Object.assign(particle.style, {
             position: 'absolute',
             width: `${size}px`,
             height: `${size}px`,
             left: `${x}%`,
             bottom: '-20px',
-            background: `radial-gradient(circle, ${color} 0%, transparent 70%)`,
+            background: isMobile ? color : `radial-gradient(circle, ${color} 0%, transparent 70%)`,
             borderRadius: '50%',
             opacity: '0',
-            boxShadow: this.options.glowEnabled ? `0 0 ${size * 3}px ${color}` : 'none',
+            boxShadow: boxShadow,
             animation: `particle-float ${duration}s ease-in-out ${delay}s infinite`,
             '--drift': `${drift}px`,
             pointerEvents: 'none',
-            zIndex: '1'
+            zIndex: '1',
+            willChange: isMobile ? 'auto' : 'transform, opacity'  // Disable willChange on mobile
         });
 
         if (this.container) {
@@ -1226,17 +1352,14 @@ class ParticleSystem {
     }
 
     setIntensity(intensity) {
+        // ═══ DISABLE INTENSITY CHANGES ON MOBILE ═══
+        if (isMobile) return;
+        
         const targetCount = Math.floor(this.options.count * (0.5 + intensity * 0.7));
         
         while (this.particles.length < targetCount && this.particles.length < this.options.count * 2) {
             this.createParticle();
         }
-
-        // Increase animation speed on high intensity
-        this.particles.forEach(p => {
-            const currentDuration = parseFloat(p.style.animationDuration);
-            p.style.animationDuration = `${currentDuration * (1 - intensity * 0.3)}s`;
-        });
     }
 
     pause() {
@@ -1246,6 +1369,8 @@ class ParticleSystem {
     }
 
     resume() {
+        if (shouldReduceAnimations) return;
+        
         this.particles.forEach(p => {
             p.style.animationPlayState = 'running';
         });
@@ -1325,9 +1450,11 @@ class UIController extends EventEmitter {
         this.elements.trackInfoWaveform = document.querySelector('.track-info__waveform');
         this.elements.qualityBars = document.querySelectorAll('.quality-bars span');
     }
-
+    
     startListenerSimulation() {
-        // Simulate real-time listener count
+        // ═══ SLOWER UPDATES ON MOBILE ═══
+        const updateInterval = isMobile ? 15000 : 5000;  // 15 seconds on mobile, 5 on desktop
+        
         this.listenerUpdateInterval = setInterval(() => {
             const change = Math.floor(Utils.random(-5, 8));
             this.listenerCount = Math.max(100, this.listenerCount + change);
@@ -1336,7 +1463,7 @@ class UIController extends EventEmitter {
             if (listenerEl) {
                 listenerEl.textContent = Utils.formatNumber(this.listenerCount);
             }
-        }, 5000);
+        }, updateInterval);
     }
 
     setupEnhancedAnimations() {
@@ -1997,7 +2124,11 @@ From: Gurbani Live Radio
     }
 
     setupMagneticButtons() {
-        if (Utils.isTouchDevice() || Utils.prefersReducedMotion()) return;
+        // ═══ COMPLETELY DISABLE ON MOBILE ═══
+        if (isMobile || Utils.isTouchDevice() || Utils.prefersReducedMotion()) {
+            console.log('[UI] Magnetic buttons disabled on mobile');
+            return;
+        }
 
         const magneticButtons = document.querySelectorAll('.control-btn');
         
@@ -2016,7 +2147,6 @@ From: Gurbani Live Radio
             });
         });
     }
-
     setupKeyboardShortcuts() {
         document.addEventListener('keydown', (e) => {
             // Don't trigger if typing in input

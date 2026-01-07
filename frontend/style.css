@@ -4112,6 +4112,71 @@ ul, ol { list-style: none; }
     opacity: 1;
     visibility: visible;
 }
-/* ═══════════════════════════════════════════════════════════════════════════════
-   END OF STYLES
-═══════════════════════════════════════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════════════════════════════════
+   MOBILE PERFORMANCE FIXES - Add this at the END of your style.css
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* This tells the phone: "Use your GPU (special fast engine) for animations" */
+* {
+    -webkit-transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   DISABLE HEAVY ANIMATIONS ON MOBILE
+   ─────────────────────────────────────────────────────────────────────────*/
+@media (max-width: 768px) {
+    
+    /* Stop all animations on mobile - makes it SUPER smooth */
+    *, *::before, *::after {
+        animation-duration: 0.1s !important;
+        transition-duration: 0.1s !important;
+    }
+    
+    /* Remove shadows (shadows are HEAVY for phones) */
+    .card, .button, .icon, .container, [class*="shadow"] {
+        box-shadow: none !important;
+    }
+    
+    /* Remove blur effects (blur is VERY heavy) */
+    .blur, .backdrop-blur, [class*="blur"] {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+    
+    /* Make sure icons don't shake */
+    .icon, i, svg, img {
+        transform: none !important;
+        animation: none !important;
+    }
+    
+    /* Disable hover effects (mobile doesn't have hover!) */
+    *:hover {
+        transform: none !important;
+        scale: 1 !important;
+    }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   SMOOTH SCROLLING FIX
+   ─────────────────────────────────────────────────────────────────────────*/
+html, body {
+    -webkit-overflow-scrolling: touch;  /* Smooth scroll on iPhone */
+    overflow-x: hidden;                  /* No horizontal scroll */
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   STOP ICONS FROM TREMBLING
+   ─────────────────────────────────────────────────────────────────────────*/
+.icon, i, svg, [class*="icon"] {
+    will-change: auto;           /* Tell browser: don't prepare for changes */
+    transform: translateZ(0);    /* Use GPU */
+    backface-visibility: hidden; /* Prevent flickering */
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MOBILE PERFORMANCE FIXES - ADD AT END OF style.css
+   ═══════════════════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════════════
+   MOBILE PERFORMANCE FIXES - Add this at the END of your style.css
