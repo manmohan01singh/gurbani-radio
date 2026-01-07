@@ -1,65 +1,41 @@
 /**
  * ╔═══════════════════════════════════════════════════════════════════════════════╗
- * ║     ੴ GURBANI RADIO - ULTRA PREMIUM EDITION v6.0 ੴ                          ║
- * ║     Enhanced Design - Audio Backend Preserved                                 ║
- * ║     MOBILE OPTIMIZED VERSION                                                  ║
+ * ║     ੴ GURBANI RADIO - FIXED VERSION v6.2 ੴ                                   ║
+ * ║     ALL BUGS FIXED - NOTES & SHABAD WORKING                                   ║
  * ╚═══════════════════════════════════════════════════════════════════════════════╝
  */
 
 'use strict';
 
 /* ═══════════════════════════════════════════════════════════════════════
-   MOBILE PERFORMANCE SYSTEM - ENHANCED VERSION
+   MOBILE PERFORMANCE SYSTEM
    ═══════════════════════════════════════════════════════════════════════ */
 
-// Detect mobile device
 const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) 
                  || window.innerWidth < 768;
-
-// Detect slow device (low memory or old phone)
 const isSlowDevice = navigator.deviceMemory ? navigator.deviceMemory < 4 : isMobile;
-
-// Detect if user prefers reduced motion
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-// Should we disable heavy features?
 const shouldReduceAnimations = isMobile || isSlowDevice || prefersReducedMotion;
-
-// Update intervals - SLOWER on mobile
-const UPDATE_INTERVAL = isMobile ? 2000 : 500;
-const VISUALIZER_THROTTLE = isMobile ? 100 : 16;  // 10fps on mobile, 60fps on desktop
-const PARTICLE_COUNT = isMobile ? 10 : 40;        // Fewer particles on mobile
 
 console.log(`📱 Device: ${isMobile ? 'Mobile' : 'Desktop'}`);
 console.log(`⚡ Performance mode: ${shouldReduceAnimations ? 'POWER SAVING' : 'FULL'}`);
 
-// Apply mobile class immediately
 if (isMobile) {
     document.documentElement.classList.add('is-mobile');
     document.body.classList.add('mobile-device');
 }
 
-// Disable animations if needed
 if (shouldReduceAnimations) {
     document.documentElement.classList.add('reduce-motion');
 }
 
 // ═══════════════════════════════════════════════════════════════
-// AUDIO CONFIG - UNTOUCHED (Keep your original)
+// AUDIO CONFIG
 // ═══════════════════════════════════════════════════════════════
 const AUDIO_CONFIG = {
     baseUrl: '/audio',
     
-    audioFiles: [
-        'day-1.webm', 'day-2.webm', 'day-3.webm', 'day-4.webm', 'day-5.webm',
-        'day-6.webm', 'day-7.webm', 'day-8.webm', 'day-9.webm', 'day-10.webm',
-        'day-11.webm', 'day-12.webm', 'day-13.webm', 'day-14.webm', 'day-15.webm',
-        'day-16.webm', 'day-17.webm', 'day-18.webm', 'day-19.webm', 'day-20.webm',
-        'day-21.webm', 'day-22.webm', 'day-23.webm', 'day-24.webm', 'day-25.webm',
-        'day-26.webm', 'day-27.webm', 'day-28.webm', 'day-29.webm', 'day-30.webm',
-        'day-31.webm', 'day-32.webm', 'day-33.webm', 'day-34.webm', 'day-35.webm',
-        'day-36.webm', 'day-37.webm', 'day-38.webm', 'day-39.webm', 'day-40.webm'
-    ],
+    audioFiles: Array.from({ length: 40 }, (_, i) => `day-${i + 1}.webm`),
     
     trackInfo: Array.from({ length: 40 }, (_, i) => ({
         title: `Day ${i + 1} - Gurbani Kirtan`,
@@ -95,7 +71,7 @@ const AUDIO_CONFIG = {
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// ENHANCED UTILITY FUNCTIONS
+// UTILITY FUNCTIONS
 // ═══════════════════════════════════════════════════════════════════════════════
 
 const Utils = {
@@ -118,34 +94,11 @@ const Utils = {
         };
     },
 
-    animateValue(element, start, end, duration, suffix = '') {
-        const range = end - start;
-        const startTime = performance.now();
-        const easeOutExpo = (t) => t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
-        
-        const step = (currentTime) => {
-            const elapsed = currentTime - startTime;
-            const progress = Math.min(elapsed / duration, 1);
-            const eased = easeOutExpo(progress);
-            const current = Math.round(start + (range * eased));
-            
-            if (element) element.textContent = current + suffix;
-            
-            if (progress < 1) {
-                requestAnimationFrame(step);
-            }
-        };
-        
-        requestAnimationFrame(step);
-    },
-
     formatTime(seconds) {
         if (!isFinite(seconds) || seconds < 0) return '0:00';
-        
         const hrs = Math.floor(seconds / 3600);
         const mins = Math.floor((seconds % 3600) / 60);
         const secs = Math.floor(seconds % 60);
-        
         if (hrs > 0) {
             return `${hrs}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         }
@@ -172,18 +125,6 @@ const Utils = {
 
     mapRange(value, inMin, inMax, outMin, outMax) {
         return (value - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
-    },
-
-    generateId() {
-        return `id_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    },
-
-    isTouchDevice() {
-        return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    },
-
-    prefersReducedMotion() {
-        return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     },
 
     haptic(style = 'light') {
@@ -227,16 +168,10 @@ const Utils = {
         }
     },
 
-    // NEW: Enhanced animation helpers
-    // NEW: Enhanced animation helpers
     createRipple(element, event) {
-        // ═══ DISABLE RIPPLE ON MOBILE ═══
         if (isMobile) {
-            // Just do a simple opacity flash instead
             element.style.opacity = '0.7';
-            setTimeout(() => {
-                element.style.opacity = '1';
-            }, 150);
+            setTimeout(() => element.style.opacity = '1', 150);
             return;
         }
         
@@ -266,34 +201,11 @@ const Utils = {
         element.appendChild(ripple);
         
         setTimeout(() => ripple.remove(), 600);
-    },
-
-    // NEW: Smooth counter animation
-    animateCounter(element, targetValue, duration = 1500) {
-        const startValue = parseInt(element.textContent) || 0;
-        const startTime = performance.now();
-        
-        const animate = (currentTime) => {
-            const elapsed = currentTime - startTime;
-            const progress = Math.min(elapsed / duration, 1);
-            
-            // Easing function
-            const eased = 1 - Math.pow(1 - progress, 3);
-            const current = Math.round(startValue + (targetValue - startValue) * eased);
-            
-            element.textContent = this.formatNumber(current);
-            
-            if (progress < 1) {
-                requestAnimationFrame(animate);
-            }
-        };
-        
-        requestAnimationFrame(animate);
     }
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// ENHANCED EVENT EMITTER
+// EVENT EMITTER
 // ═══════════════════════════════════════════════════════════════════════════════
 
 class EventEmitter {
@@ -365,14 +277,10 @@ class StateManager extends EventEmitter {
             this._state[key] = value;
         });
     }
-
-    subscribe(property, callback) {
-        return this.on(`change:${property}`, callback);
-    }
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// VIRTUAL LIVE MANAGER (AUDIO BACKEND - UNTOUCHED)
+// VIRTUAL LIVE MANAGER
 // ═══════════════════════════════════════════════════════════════════════════════
 
 class VirtualLiveManager extends EventEmitter {
@@ -384,7 +292,6 @@ class VirtualLiveManager extends EventEmitter {
         this.pausedAt = null;
         this.isLive = true;
         this.liveThreshold = 5;
-        console.log('[VirtualLive] Initialized');
     }
 
     loadBroadcastStart() {
@@ -505,19 +412,10 @@ class VirtualLiveManager extends EventEmitter {
         }
         return this.isLive;
     }
-
-    resetBroadcast() {
-        this.broadcastStartTime = Date.now();
-        Utils.storage.set('broadcastStartTime', this.broadcastStartTime);
-        this.pausedAt = null;
-        this.isLive = true;
-        this.emit('broadcastReset');
-        this.emit('liveStatusChange', { isLive: true });
-    }
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// AUDIO ENGINE (BACKEND - COMPLETELY UNTOUCHED)
+// AUDIO ENGINE
 // ═══════════════════════════════════════════════════════════════════════════════
 
 class AudioEngine extends EventEmitter {
@@ -539,7 +437,6 @@ class AudioEngine extends EventEmitter {
         this.gainNode = null;
         this.sourceNode = null;
         this.frequencyData = null;
-        this.timeDomainData = null;
         this.currentTrackIndex = 0;
         this.playlist = [...Array(AUDIO_CONFIG.totalTracks).keys()];
         this.playHistory = [];
@@ -555,7 +452,6 @@ class AudioEngine extends EventEmitter {
         this.virtualLive = new VirtualLiveManager();
         this.isLive = true;
         this.corsEnabled = false;
-        this.corsAttempted = false;
         this.retryCount = 0;
         this.maxRetries = 3;
         this.retryDelay = 2000;
@@ -586,7 +482,6 @@ class AudioEngine extends EventEmitter {
             this.analyser.connect(this.gainNode);
 
             this.frequencyData = new Uint8Array(this.analyser.frequencyBinCount);
-            this.timeDomainData = new Uint8Array(this.analyser.fftSize);
 
             this.emit('initialized');
         } catch (error) {
@@ -623,8 +518,6 @@ class AudioEngine extends EventEmitter {
         if (useCORS) {
             this.audio.crossOrigin = 'anonymous';
             this.corsEnabled = true;
-        } else {
-            this.corsEnabled = false;
         }
 
         this._attachAudioEvents();
@@ -647,22 +540,6 @@ class AudioEngine extends EventEmitter {
         }
     }
 
-    _connectToWebAudio() {
-        if (!this.audioContext || !this.audio || this.sourceNode) return;
-        if (!this.corsEnabled) return;
-
-        try {
-            if (this.audioContext.state === 'suspended') {
-                this.audioContext.resume();
-            }
-
-            this.sourceNode = this.audioContext.createMediaElementSource(this.audio);
-            this.sourceNode.connect(this.analyser);
-        } catch (error) {
-            console.warn('[AudioEngine] Web Audio connection failed:', error);
-        }
-    }
-
     _attachAudioEvents() {
         if (!this.audio) return;
 
@@ -675,10 +552,6 @@ class AudioEngine extends EventEmitter {
             this.duration = this.audio.duration;
             this.virtualLive.setTrackDuration(this.currentTrackIndex, this.duration);
             this.emit('durationchange', { duration: this.duration });
-        });
-
-        this.audio.addEventListener('loadeddata', () => {
-            this._connectToWebAudio();
         });
 
         this.audio.addEventListener('canplay', () => {
@@ -708,29 +581,19 @@ class AudioEngine extends EventEmitter {
             this.emit('buffering');
         });
 
-        this.audio.addEventListener('seeking', () => this.emit('seeking'));
-        this.audio.addEventListener('seeked', () => this.emit('seeked'));
-
         this.audio.addEventListener('ended', () => {
             this.isPlaying = false;
             this._handleTrackEnded();
         });
 
-        this.audio.addEventListener('error', (e) => {
+        this.audio.addEventListener('error', () => {
             this._handleError(this.audio?.error);
         });
 
         this.audio.addEventListener('timeupdate', this._onTimeUpdate);
+        
         this.audio.addEventListener('volumechange', () => {
             this.emit('volumechange', { volume: this.audio?.volume || 0 });
-        });
-
-        this.audio.addEventListener('progress', () => {
-            if (this.audio?.buffered.length > 0) {
-                const bufferedEnd = this.audio.buffered.end(this.audio.buffered.length - 1);
-                const bufferedPercent = (bufferedEnd / this.audio.duration) * 100;
-                this.emit('bufferprogress', { percent: bufferedPercent, bufferedEnd });
-            }
         });
     }
 
@@ -860,8 +723,6 @@ class AudioEngine extends EventEmitter {
             this.audio.currentTime = 0;
         }
         this.isPlaying = false;
-        this.isLoading = false;
-        this.isBuffering = false;
         this.currentTime = 0;
         this.virtualLive.pausedAt = null;
         this.emit('stopped');
@@ -905,11 +766,6 @@ class AudioEngine extends EventEmitter {
     hasNext() {
         if (this.repeat === 'all' || this.shuffle) return true;
         return this.currentTrackIndex < AUDIO_CONFIG.totalTracks - 1;
-    }
-
-    hasPrevious() {
-        if (this.repeat === 'all' || this.shuffle) return true;
-        return this.currentTrackIndex > 0 || this.currentTime > 3;
     }
 
     seek(value, isSeconds = false) {
@@ -958,33 +814,12 @@ class AudioEngine extends EventEmitter {
         return this.repeat;
     }
 
-    setRepeat(mode) {
-        if (['none', 'all', 'one'].includes(mode)) {
-            this.repeat = mode;
-            Utils.storage.set('repeat', this.repeat);
-            this.emit('repeatchange', { repeat: this.repeat });
-        }
-    }
-
     getFrequencyData() {
         if (this.analyser && this.frequencyData && this.isPlaying && this.corsEnabled) {
             this.analyser.getByteFrequencyData(this.frequencyData);
             return this.frequencyData;
         }
         return new Uint8Array(128).fill(0);
-    }
-
-    getTimeDomainData() {
-        if (this.analyser && this.timeDomainData && this.isPlaying && this.corsEnabled) {
-            this.analyser.getByteTimeDomainData(this.timeDomainData);
-            return this.timeDomainData;
-        }
-        return new Uint8Array(128).fill(128);
-    }
-
-    getAverageFrequency() {
-        const data = this.getFrequencyData();
-        return data.reduce((acc, val) => acc + val, 0) / data.length;
     }
 
     getBassLevel() {
@@ -1003,23 +838,18 @@ class AudioEngine extends EventEmitter {
 
         if (error instanceof MediaError) {
             switch (error.code) {
-                case MediaError.MEDIA_ERR_ABORTED:
-                    errorInfo = { type: 'aborted', message: 'Playback aborted', recoverable: false };
-                    break;
                 case MediaError.MEDIA_ERR_NETWORK:
                     errorInfo = { type: 'network', message: 'Network error', recoverable: true };
                     break;
                 case MediaError.MEDIA_ERR_DECODE:
                     errorInfo = { type: 'decode', message: 'Cannot decode audio', recoverable: true };
                     break;
-                                case MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED:
+                case MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED:
                     errorInfo = { type: 'source', message: 'Format not supported', recoverable: false };
                     break;
             }
         } else if (error?.name === 'NotAllowedError') {
             errorInfo = { type: 'permission', message: 'Click play to start', recoverable: false };
-        } else if (error?.name === 'NotSupportedError') {
-            errorInfo = { type: 'unsupported', message: 'Audio could not load', recoverable: true };
         }
 
         this.emit('error', errorInfo);
@@ -1037,18 +867,11 @@ class AudioEngine extends EventEmitter {
             this.audioContext.close();
             this.audioContext = null;
         }
-        this.analyser = null;
-        this.gainNode = null;
-        this.frequencyData = null;
-        this.timeDomainData = null;
     }
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// ENHANCED VISUALIZER ENGINE
-// ═══════════════════════════════════════════════════════════════════════════════
-// ═══════════════════════════════════════════════════════════════════════════════
-// ENHANCED VISUALIZER ENGINE - MOBILE OPTIMIZED
+// VISUALIZER ENGINE (Mobile Optimized)
 // ═══════════════════════════════════════════════════════════════════════════════
 
 class VisualizerEngine {
@@ -1059,30 +882,19 @@ class VisualizerEngine {
             sensitivity: options.sensitivity || 1.8,
             smoothing: options.smoothing || 0.75,
             minHeight: options.minHeight || 6,
-            maxHeight: options.maxHeight || 45,
-            glowIntensity: options.glowIntensity || 1,
-            ...options
+            maxHeight: options.maxHeight || 45
         };
 
         this.bars = [];
         this.previousHeights = [];
         this.isActive = false;
         this.animationId = null;
-        this.beatThreshold = 0.55;
-        this.lastBeat = 0;
-        this.beatCooldown = 120;
-        this.colorPhase = 0;
-        
-        // ═══ MOBILE OPTIMIZATION ═══
-        this.lastAnimationTime = 0;
-        this.frameSkip = isMobile ? 3 : 0;  // Skip frames on mobile
-        this.frameCount = 0;
 
         this.init();
     }
 
     init() {
-        const container = document.getElementById('visualizer') || document.querySelector('.sacred-visualizer');
+        const container = document.querySelector('.sacred-visualizer');
         if (container) {
             this.bars = Array.from(container.querySelectorAll('.viz-bar'));
             this.previousHeights = new Array(this.bars.length).fill(this.options.minHeight);
@@ -1093,28 +905,11 @@ class VisualizerEngine {
         this.audioEngine.on('stopped', () => this.stop());
     }
 
-start() {
-    // ═══ COMPLETELY DISABLE ON MOBILE ═══
-    if (isMobile || shouldReduceAnimations) {
-        // Don't animate anything on mobile
-        return;
-    }
-    
-    if (this.isActive) return;
-    
-    this.isActive = true;
-    this.animate();
-}
-
-    // ═══ NEW: Static bars for mobile (no animation, no lag!) ═══
-    setStaticBars() {
-        this.bars.forEach((bar, index) => {
-            const height = this.options.minHeight + (index % 3) * 8;
-            bar.style.height = `${height}px`;
-            bar.style.transition = 'none';
-            bar.style.animation = 'none';
-            bar.style.boxShadow = '0 0 10px rgba(247, 198, 52, 0.3)';
-        });
+    start() {
+        if (isMobile || shouldReduceAnimations) return;
+        if (this.isActive) return;
+        this.isActive = true;
+        this.animate();
     }
 
     stop() {
@@ -1126,48 +921,22 @@ start() {
 
         this.bars.forEach((bar) => {
             bar.style.height = `${this.options.minHeight}px`;
-            bar.style.boxShadow = 'none';
-            bar.style.background = '';
         });
     }
 
     animate() {
         if (!this.isActive) return;
 
-        // ═══ FRAME THROTTLING FOR MOBILE ═══
-        const now = performance.now();
-        
-        // Skip frames on mobile to reduce CPU usage
-        if (isMobile) {
-            this.frameCount++;
-            if (this.frameCount % (this.frameSkip + 1) !== 0) {
-                this.animationId = requestAnimationFrame(() => this.animate());
-                return;
-            }
-            
-            // Also limit by time (minimum 50ms between frames on mobile = 20fps max)
-            if (now - this.lastAnimationTime < 50) {
-                this.animationId = requestAnimationFrame(() => this.animate());
-                return;
-            }
-        }
-        
-        this.lastAnimationTime = now;
-
         const frequencyData = this.audioEngine.getFrequencyData();
         const dataLength = frequencyData.length;
-        this.colorPhase += 0.01;
         
         this.bars.forEach((bar, index) => {
             const start = Math.floor(index * dataLength / this.bars.length);
             const end = Math.floor((index + 1) * dataLength / this.bars.length);
             
             let sum = 0;
-            for (let i = start; i < end; i++) {
-                sum += frequencyData[i];
-            }
+            for (let i = start; i < end; i++) sum += frequencyData[i];
             const average = sum / (end - start);
-            
             const normalized = (average / 255) * this.options.sensitivity;
             
             const targetHeight = Utils.mapRange(
@@ -1183,173 +952,81 @@ start() {
             );
             
             this.previousHeights[index] = smoothedHeight;
-            
             bar.style.height = `${smoothedHeight}px`;
-            
-            // ═══ SIMPLER EFFECTS ON MOBILE ═══
-            if (isMobile) {
-                // Simple glow, no color shift (saves CPU)
-                bar.style.boxShadow = `0 0 ${normalized * 15}px rgba(247, 198, 52, 0.5)`;
-            } else {
-                // Full effects on desktop
-                const intensity = normalized * this.options.glowIntensity;
-                const hue = (40 + Math.sin(this.colorPhase + index * 0.3) * 15) % 360;
-                bar.style.boxShadow = `0 0 ${intensity * 25}px hsla(${hue}, 80%, 55%, ${intensity * 0.7})`;
-                bar.style.background = `linear-gradient(to top, hsl(${hue}, 70%, 45%), hsl(${hue + 10}, 80%, 60%))`;
-            }
         });
-
-        // ═══ SKIP BEAT DETECTION ON MOBILE ═══
-        if (!isMobile) {
-            this.detectBeat();
-        }
         
         this.animationId = requestAnimationFrame(() => this.animate());
-    }
-
-    detectBeat() {
-        const now = performance.now();
-        if (now - this.lastBeat < this.beatCooldown) return;
-
-        const bassLevel = this.audioEngine.getBassLevel();
-        
-        if (bassLevel > this.beatThreshold) {
-            this.lastBeat = now;
-            this.onBeat(bassLevel);
-        }
-    }
-
-    onBeat(intensity) {
-        // ═══ SKIP BEAT EFFECTS ON MOBILE ═══
-        if (isMobile) return;
-        
-        this.audioEngine.emit('beat', { intensity });
-
-        const sacredImage = document.querySelector('.sacred-image');
-        const sacredFrame = document.querySelector('.sacred-frame');
-        
-        if (sacredImage && !prefersReducedMotion) {
-            sacredImage.style.transform = `scale(${1 + intensity * 0.05})`;
-            setTimeout(() => {
-                sacredImage.style.transform = 'scale(1)';
-            }, 120);
-        }
-
-        if (sacredFrame && !prefersReducedMotion) {
-            sacredFrame.style.boxShadow = `0 0 ${50 + intensity * 30}px rgba(247, 198, 52, ${0.5 + intensity * 0.3})`;
-            setTimeout(() => {
-                sacredFrame.style.boxShadow = '';
-            }, 150);
-        }
-    }
-
-    setOptions(options) {
-        this.options = { ...this.options, ...options };
     }
 
     destroy() {
         this.stop();
         this.bars = [];
-        this.previousHeights = [];
     }
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// ENHANCED PARTICLE SYSTEM
-// ═══════════════════════════════════════════════════════════════════════════════
-// ═══════════════════════════════════════════════════════════════════════════════
-// ENHANCED PARTICLE SYSTEM - MOBILE OPTIMIZED
+// PARTICLE SYSTEM (Disabled on Mobile)
 // ═══════════════════════════════════════════════════════════════════════════════
 
 class ParticleSystem {
     constructor(container, options = {}) {
-    // ═══ COMPLETELY DISABLE ON MOBILE ═══
-    if (isMobile || shouldReduceAnimations) {
-        console.log('[Particles] Disabled for mobile performance');
-        this.particles = [];
-        this.isActive = false;
-        return;
-    }
-    
-    this.container = typeof container === 'string' 
-        ? document.getElementById(container) 
-        : container;
-    
-    const particleCount = options.count || 40;
-   
+        if (isMobile || shouldReduceAnimations) {
+            this.particles = [];
+            this.isActive = false;
+            return;
+        }
+        
+        this.container = typeof container === 'string' 
+            ? document.getElementById(container) 
+            : container;
         
         this.options = {
-            count: particleCount,
-            colors: options.colors || ['#FFD700', '#FFA500', '#FF8C00', '#DAA520', '#F4E04D'],
-            minSize: isMobile ? 3 : (options.minSize || 2),  // Slightly larger on mobile (fewer but visible)
-            maxSize: isMobile ? 5 : (options.maxSize || 7),
-            minDuration: isMobile ? 20 : (options.minDuration || 12),  // Slower on mobile
-            maxDuration: isMobile ? 40 : (options.maxDuration || 30),
-            glowEnabled: isMobile ? false : (options.glowEnabled !== false),  // No glow on mobile
-            ...options
+            count: options.count || 40,
+            colors: options.colors || ['#FFD700', '#FFA500', '#FF8C00', '#DAA520'],
+            minSize: options.minSize || 2,
+            maxSize: options.maxSize || 7
         };
 
         this.particles = [];
         this.isActive = false;
 
-        // ═══ COMPLETELY DISABLE ON VERY SLOW DEVICES ═══
-        if (shouldReduceAnimations) {
-            console.log('[Particles] Disabled for performance');
-            return;
-        }
-
-        if (this.container) {
-            this.init();
-        }
+        if (this.container) this.init();
     }
 
     init() {
-        if (shouldReduceAnimations) return;
-        
-        // Clear existing
-        if (this.container) {
-            this.container.innerHTML = '';
-        }
+        if (this.container) this.container.innerHTML = '';
         this.particles = [];
 
         for (let i = 0; i < this.options.count; i++) {
             this.createParticle();
         }
-
         this.isActive = true;
     }
 
     createParticle() {
-        if (shouldReduceAnimations) return;
-        
         const particle = document.createElement('div');
         particle.className = 'floating-particle';
         
         const size = Utils.random(this.options.minSize, this.options.maxSize);
-        const duration = Utils.random(this.options.minDuration, this.options.maxDuration);
+        const duration = Utils.random(12, 30);
         const delay = Utils.random(0, duration);
         const x = Utils.random(0, 100);
         const drift = Utils.random(-30, 30);
         const color = this.options.colors[Math.floor(Math.random() * this.options.colors.length)];
 
-        // ═══ SIMPLER STYLES ON MOBILE ═══
-        const boxShadow = this.options.glowEnabled ? `0 0 ${size * 3}px ${color}` : 'none';
-        
         Object.assign(particle.style, {
             position: 'absolute',
             width: `${size}px`,
             height: `${size}px`,
             left: `${x}%`,
             bottom: '-20px',
-            background: isMobile ? color : `radial-gradient(circle, ${color} 0%, transparent 70%)`,
+            background: `radial-gradient(circle, ${color} 0%, transparent 70%)`,
             borderRadius: '50%',
             opacity: '0',
-            boxShadow: boxShadow,
             animation: `particle-float ${duration}s ease-in-out ${delay}s infinite`,
             '--drift': `${drift}px`,
             pointerEvents: 'none',
-            zIndex: '1',
-            willChange: isMobile ? 'auto' : 'transform, opacity'  // Disable willChange on mobile
+            zIndex: '1'
         });
 
         if (this.container) {
@@ -1358,29 +1035,13 @@ class ParticleSystem {
         }
     }
 
-    setIntensity(intensity) {
-        // ═══ DISABLE INTENSITY CHANGES ON MOBILE ═══
-        if (isMobile) return;
-        
-        const targetCount = Math.floor(this.options.count * (0.5 + intensity * 0.7));
-        
-        while (this.particles.length < targetCount && this.particles.length < this.options.count * 2) {
-            this.createParticle();
-        }
-    }
-
     pause() {
-        this.particles.forEach(p => {
-            p.style.animationPlayState = 'paused';
-        });
+        this.particles.forEach(p => p.style.animationPlayState = 'paused');
     }
 
     resume() {
         if (shouldReduceAnimations) return;
-        
-        this.particles.forEach(p => {
-            p.style.animationPlayState = 'running';
-        });
+        this.particles.forEach(p => p.style.animationPlayState = 'running');
     }
 
     destroy() {
@@ -1391,7 +1052,7 @@ class ParticleSystem {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// ENHANCED UI CONTROLLER
+// UI CONTROLLER - COMPLETELY FIXED
 // ═══════════════════════════════════════════════════════════════════════════════
 
 class UIController extends EventEmitter {
@@ -1408,6 +1069,14 @@ class UIController extends EventEmitter {
         this.firstPlay = true;
         this.listenerCount = 1247;
         this.listenerUpdateInterval = null;
+        
+        // Notes state
+        this.notesOriginalContent = '';
+        this.notesModified = false;
+        
+        // Shabad state
+        this.currentShabad = null;
+        this.shabadBookmarked = false;
 
         this.init();
     }
@@ -1416,51 +1085,133 @@ class UIController extends EventEmitter {
         this.cacheElements();
         this.setupEventListeners();
         this.setupProgressBar();
-        this.setupMagneticButtons();
         this.setupKeyboardShortcuts();
         this.setupAudioEventListeners();
         this.loadSavedState();
         this.hideLoadingScreen();
         this.setupLiveButton();
         this.startListenerSimulation();
-        this.setupEnhancedAnimations();
+        this.injectStyles();
     }
 
     cacheElements() {
         const ids = [
-            'playBtn', 'playIcon', 'prevBtn', 'nextBtn', 'shuffleBtn', 'repeatBtn',
+            'playBtn', 'playIcon', 'prevBtn', 'nextBtn',
             'volumeBtn', 'volumeSlider', 'volumeValue', 'volumePopup', 'volumeFill',
-            'shabadTitle', 'shabadArtist', 'trackNumber',
-            'currentTime', 'totalTime', 'progressContainer', 'progressFill', 'progressGlow', 'progressScrubber',
-            'loadingScreen', 'toast', 'toastMessage', 'toastIcon',
+            'currentTime', 'totalTime', 'progressFill', 'progressScrubber', 'progressTrack',
+            'loadingScreen', 'toast',
             'scheduleBtn', 'scheduleModal', 'closeScheduleModal',
             'shareBtn', 'shareModal', 'closeShareModal',
-            'favoriteBtn', 'infoBtn', 'copyLinkBtn', 'liveBtn',
-            'visualizer', 'albumArt', 'sacredImage', 'listenerCount',
+            'favoriteBtn', 'copyLinkBtn', 'liveBtn', 'listenerCount',
             'shareWhatsapp', 'shareTelegram', 'shareFacebook', 'shareTwitter',
-'notesCard', 'notesModal', 'closeNotesModal', 'notesTextarea', 'saveNotesBtn', 'clearNotesBtn',
-'randomShabadCard', 'shabadModal', 'closeShabadModal', 'shabadContainer', 'shabadLoading', 
-'shabadContent', 'shabadError', 'shabadAng', 'shabadGurmukhi', 'shabadTransliteration', 
-'shabadTranslation', 'shabadSource', 'newShabadBtn', 'copyShabadBtn'
+            // Notes
+            'notesCard', 'notesOverlay', 'notesClose', 
+            'notesTextarea', 'notesCharCount',
+            'saveNotesBtn', 'downloadNotesBtn', 'clearNotesBtn',
+            'notesConfirmOverlay', 'confirmSaveBtn', 'confirmDiscardBtn', 'confirmCancelBtn',
+            'notesToast', 'notesToastMessage',
+            // Shabad
+            'randomShabadCard', 'shabadOverlay', 'shabadClose', 
+            'shabadLoading', 'shabadContent', 'shabadError',
+            'shabadAngNumber', 'shabadGurmukhi', 
+            'shabadTransliteration', 'shabadTranslation', 'shabadSource',
+            'newShabadBtn', 'copyShabadBtn', 'shareShabadBtn', 'bookmarkShabadBtn',
+            'shabadTooltip', 'shabadRetryBtn',
+            // Bento cards
+            'DailyHukamnamaCard', 'nitnemCard'
         ];
 
         ids.forEach(id => {
             this.elements[id] = document.getElementById(id);
         });
 
-        // Query selectors for elements without IDs
+        // Query selectors
         this.elements.statusLive = document.querySelector('.status-item--live');
-        this.elements.statusListeners = document.querySelector('.status-item--listeners');
         this.elements.playerCard = document.querySelector('.player__card');
-        this.elements.sacredFrame = document.querySelector('.sacred-frame');
-        this.elements.sacredGlow = document.querySelector('.sacred-image-glow');
-        this.elements.trackInfoWaveform = document.querySelector('.track-info__waveform');
-        this.elements.qualityBars = document.querySelectorAll('.quality-bars span');
+        this.elements.calendarCard = document.querySelector('.bento-card--calendar');
     }
-    
+
+    injectStyles() {
+        if (document.getElementById('ui-controller-styles')) return;
+        
+        const style = document.createElement('style');
+        style.id = 'ui-controller-styles';
+        style.textContent = `
+            @keyframes ripple-expand {
+                0% { transform: scale(0); opacity: 1; }
+                100% { transform: scale(4); opacity: 0; }
+            }
+            
+            @keyframes particle-float {
+                0% { transform: translateY(0) translateX(0) scale(0); opacity: 0; }
+                10% { opacity: 0.8; transform: translateY(-10vh) translateX(calc(var(--drift) * 0.3)) scale(1); }
+                90% { opacity: 0.4; }
+                100% { transform: translateY(-100vh) translateX(var(--drift)) scale(0.5); opacity: 0; }
+            }
+
+            .live-btn {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                padding: 6px 14px;
+                background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(220, 38, 38, 0.1));
+                border: 1px solid rgba(239, 68, 68, 0.4);
+                border-radius: 20px;
+                color: #ef4444;
+                font-size: 11px;
+                font-weight: 700;
+                letter-spacing: 1.5px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                text-transform: uppercase;
+            }
+
+            .live-btn:hover {
+                background: linear-gradient(135deg, rgba(239, 68, 68, 0.25), rgba(220, 38, 38, 0.2));
+                transform: scale(1.05);
+            }
+
+            .live-btn--active { box-shadow: 0 0 20px rgba(239, 68, 68, 0.4); }
+            .live-btn--inactive { background: rgba(100, 100, 100, 0.15); border-color: rgba(100, 100, 100, 0.3); color: #888; }
+
+            .live-btn__pulse {
+                width: 8px;
+                height: 8px;
+                background: #ef4444;
+                border-radius: 50%;
+                animation: live-pulse 1.5s ease-in-out infinite;
+            }
+
+            .live-btn--inactive .live-btn__pulse { display: none; }
+
+            @keyframes live-pulse {
+                0%, 100% { transform: scale(1); opacity: 1; }
+                50% { transform: scale(1.4); opacity: 0.6; }
+            }
+            
+            /* Notes & Shabad Overlays */
+            .notes-overlay.active,
+            .shabad-overlay.active {
+                display: flex !important;
+                opacity: 1 !important;
+                visibility: visible !important;
+            }
+            
+            .notes-toast.show,
+            .shabad-tooltip.show {
+                opacity: 1 !important;
+                transform: translateY(0) !important;
+            }
+            
+            .notes-confirm-overlay.active {
+                display: flex !important;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
     startListenerSimulation() {
-        // ═══ SLOWER UPDATES ON MOBILE ═══
-        const updateInterval = isMobile ? 15000 : 5000;  // 15 seconds on mobile, 5 on desktop
+        const updateInterval = isMobile ? 15000 : 5000;
         
         this.listenerUpdateInterval = setInterval(() => {
             const change = Math.floor(Utils.random(-5, 8));
@@ -1473,148 +1224,15 @@ class UIController extends EventEmitter {
         }, updateInterval);
     }
 
-    setupEnhancedAnimations() {
-        // Add ripple styles if not present
-        if (!document.getElementById('enhanced-ui-styles')) {
-            const style = document.createElement('style');
-            style.id = 'enhanced-ui-styles';
-            style.textContent = `
-                @keyframes ripple-expand {
-                    0% { transform: scale(0); opacity: 1; }
-                    100% { transform: scale(4); opacity: 0; }
-                }
-                
-                @keyframes particle-float {
-                    0% {
-                        transform: translateY(0) translateX(0) scale(0);
-                        opacity: 0;
-                    }
-                    10% {
-                        opacity: 0.8;
-                        transform: translateY(-10vh) translateX(calc(var(--drift) * 0.3)) scale(1);
-                    }
-                    90% {
-                        opacity: 0.4;
-                    }
-                    100% {
-                        transform: translateY(-100vh) translateX(var(--drift)) scale(0.5);
-                        opacity: 0;
-                    }
-                }
-
-                @keyframes toast-slide-in {
-                    0% { transform: translateX(-50%) translateY(100px); opacity: 0; }
-                    100% { transform: translateX(-50%) translateY(0); opacity: 1; }
-                }
-
-                @keyframes toast-slide-out {
-                    0% { transform: translateX(-50%) translateY(0); opacity: 1; }
-                    100% { transform: translateX(-50%) translateY(100px); opacity: 0; }
-                }
-
-                @keyframes button-press {
-                    0% { transform: scale(1); }
-                    50% { transform: scale(0.92); }
-                    100% { transform: scale(1); }
-                }
-
-                @keyframes glow-pulse-active {
-                    0%, 100% { opacity: 0.6; filter: blur(25px); }
-                    50% { opacity: 1; filter: blur(35px); }
-                }
-
-                .btn-press-animation {
-                    animation: button-press 0.2s ease-out;
-                }
-
-                .live-btn {
-                    display: inline-flex;
-                    align-items: center;
-                    gap: 6px;
-                    padding: 6px 14px;
-                    background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(220, 38, 38, 0.1));
-                    border: 1px solid rgba(239, 68, 68, 0.4);
-                    border-radius: 20px;
-                    color: #ef4444;
-                    font-size: 11px;
-                    font-weight: 700;
-                    letter-spacing: 1.5px;
-                    cursor: pointer;
-                    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-                    text-transform: uppercase;
-                }
-
-                .live-btn:hover {
-                    background: linear-gradient(135deg, rgba(239, 68, 68, 0.25), rgba(220, 38, 38, 0.2));
-                    transform: scale(1.05);
-                    box-shadow: 0 0 25px rgba(239, 68, 68, 0.3);
-                }
-
-                .live-btn--active {
-                    box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
-                }
-
-                .live-btn--inactive {
-                    background: rgba(100, 100, 100, 0.15);
-                    border-color: rgba(100, 100, 100, 0.3);
-                    color: #888;
-                }
-
-                .live-btn__pulse {
-                    width: 8px;
-                    height: 8px;
-                    background: #ef4444;
-                    border-radius: 50%;
-                    animation: live-pulse 1.5s ease-in-out infinite;
-                    box-shadow: 0 0 10px #ef4444;
-                }
-
-                .live-btn--inactive .live-btn__pulse {
-                    display: none;
-                }
-
-                @keyframes live-pulse {
-                    0%, 100% { transform: scale(1); opacity: 1; }
-                    50% { transform: scale(1.4); opacity: 0.6; }
-                }
-
-                /* Enhanced hover effects */
-                .control-btn--secondary:hover .control-btn__bg {
-                    background: rgba(247, 198, 52, 0.12) !important;
-                    border-color: rgba(247, 198, 52, 0.35) !important;
-                    box-shadow: 0 0 25px rgba(247, 198, 52, 0.2) !important;
-                }
-
-                .bento-card:hover .bento-card__icon {
-                    animation: icon-bounce 0.5s ease;
-                }
-
-                @keyframes icon-bounce {
-                    0%, 100% { transform: scale(1) rotate(0deg); }
-                    25% { transform: scale(1.15) rotate(-3deg); }
-                    75% { transform: scale(1.15) rotate(3deg); }
-                }
-            `;
-            document.head.appendChild(style);
-        }
-    }
-
     setupLiveButton() {
-        // Create Live button if not in HTML
         let liveBtn = this.elements.liveBtn;
         
         if (!liveBtn) {
             liveBtn = document.createElement('button');
             liveBtn.id = 'liveBtn';
             liveBtn.className = 'live-btn live-btn--active';
-            liveBtn.innerHTML = `
-                <span class="live-btn__pulse"></span>
-                <span class="live-btn__text">LIVE</span>
-            `;
-            liveBtn.title = 'Go to Live';
-            liveBtn.setAttribute('aria-label', 'Go to Live broadcast');
+            liveBtn.innerHTML = `<span class="live-btn__pulse"></span><span class="live-btn__text">LIVE</span>`;
             
-            // Insert into progress time section
             const progressTime = document.querySelector('.progress-time');
             const liveIndicator = document.querySelector('.progress-time__live');
             if (progressTime && liveIndicator) {
@@ -1626,13 +1244,9 @@ class UIController extends EventEmitter {
 
         if (this.elements.liveBtn) {
             this.elements.liveBtn.addEventListener('click', async () => {
-                this.elements.liveBtn.classList.add('btn-press-animation');
                 Utils.haptic('medium');
                 await this.audio.goLive();
                 this.showToast('🔴 Jumped to LIVE', 'success');
-                setTimeout(() => {
-                    this.elements.liveBtn.classList.remove('btn-press-animation');
-                }, 200);
             });
         }
     }
@@ -1643,24 +1257,21 @@ class UIController extends EventEmitter {
         if (liveBtn) {
             liveBtn.classList.toggle('live-btn--active', isLive);
             liveBtn.classList.toggle('live-btn--inactive', !isLive);
-            liveBtn.title = isLive ? 'Currently Live' : 'Click to go Live';
         }
 
         if (statusLive) {
             const dot = statusLive.querySelector('.status-item__dot');
-            const label = statusLive.querySelector('.status-item__label');
             if (dot) {
                 dot.style.background = isLive ? '#ef4444' : '#888';
-                dot.style.boxShadow = isLive ? '0 0 10px #ef4444' : 'none';
-            }
-            if (label) {
-                label.style.color = isLive ? '#ef4444' : '#888';
             }
         }
     }
 
     setupEventListeners() {
-        // Play Button
+        // ═══════════════════════════════════════════════════════════════
+        // PLAYER CONTROLS
+        // ═══════════════════════════════════════════════════════════════
+        
         this.addClickHandler('playBtn', async (e) => {
             Utils.createRipple(this.elements.playBtn, e);
             Utils.haptic('medium');
@@ -1673,46 +1284,22 @@ class UIController extends EventEmitter {
             }
         });
 
-        // Previous Button
-        this.addClickHandler('prevBtn', (e) => {
-            Utils.createRipple(e.currentTarget, e);
+        this.addClickHandler('prevBtn', () => {
             Utils.haptic('light');
             this.audio.previous();
         });
 
-        // Next Button
-        this.addClickHandler('nextBtn', (e) => {
-            Utils.createRipple(e.currentTarget, e);
+        this.addClickHandler('nextBtn', () => {
             Utils.haptic('light');
             this.audio.next();
         });
 
-                // Shuffle Button
-        this.addClickHandler('shuffleBtn', (e) => {
-            Utils.createRipple(e.currentTarget, e);
-            Utils.haptic('light');
-            const isShuffled = this.audio.toggleShuffle();
-            this.updateShuffleButton(isShuffled);
-            this.showToast(isShuffled ? '🔀 Shuffle On' : '🔀 Shuffle Off', 'info');
-        });
-
-        // Repeat Button
-        this.addClickHandler('repeatBtn', (e) => {
-            Utils.createRipple(e.currentTarget, e);
-            Utils.haptic('light');
-            const mode = this.audio.cycleRepeat();
-            this.updateRepeatButton(mode);
-            const messages = { none: '➡️ Repeat Off', all: '🔁 Repeat All', one: '🔂 Repeat One' };
-            this.showToast(messages[mode], 'info');
-        });
-
-        // Volume Button
+        // Volume
         this.addClickHandler('volumeBtn', (e) => {
             e.stopPropagation();
             this.toggleVolumePopup();
         });
 
-        // Volume Slider
         if (this.elements.volumeSlider) {
             this.elements.volumeSlider.addEventListener('input', (e) => {
                 const value = e.target.value / 100;
@@ -1721,81 +1308,25 @@ class UIController extends EventEmitter {
             });
         }
 
-        // Click outside to close volume popup
         document.addEventListener('click', (e) => {
             const volumePopup = this.elements.volumePopup;
             const volumeBtn = this.elements.volumeBtn;
-             if (volumePopup && !volumePopup.contains(e.target) && !volumeBtn?.contains(e.target)) {
-            volumePopup.setAttribute('data-visible', 'false');
-            volumePopup.classList.remove('volume-popup--visible');
-        }
+            if (volumePopup && !volumePopup.contains(e.target) && !volumeBtn?.contains(e.target)) {
+                volumePopup.setAttribute('data-visible', 'false');
+            }
         });
 
-        // Favorite Button
-        this.addClickHandler('favoriteBtn', (e) => {
-            Utils.createRipple(e.currentTarget, e);
+        // Favorite
+        this.addClickHandler('favoriteBtn', () => {
             Utils.haptic('success');
             this.toggleFavorite();
         });
 
-        // Info Button
-        this.addClickHandler('infoBtn', (e) => {
-            Utils.createRipple(e.currentTarget, e);
-            this.showTrackInfo();
-        });
-
-        // Schedule Modal
-        this.addClickHandler('scheduleBtn', () => {
-            this.openModal('scheduleModal');
-        });
-
-        this.addClickHandler('closeScheduleModal', () => {
-            this.closeModal('scheduleModal');
-        });
-
-        // Share Modal
-        this.addClickHandler('shareBtn', () => {
-            this.openModal('shareModal');
-        });
-
-        this.addClickHandler('closeShareModal', () => {
-            this.closeModal('shareModal');
-        });
-
-        // Notes Modal
-this.addClickHandler('notesCard', () => {
-    this.openModal('notesModal');
-    this.loadNotes();
-});
-
-this.addClickHandler('closeNotesModal', () => {
-    this.closeModal('notesModal');
-});
-
-this.addClickHandler('saveNotesBtn', () => {
-    this.saveNotes();
-});
-
-this.addClickHandler('clearNotesBtn', () => {
-    this.clearNotes();
-});
-// Random Shabad Modal
-this.addClickHandler('randomShabadCard', () => {
-    this.openModal('shabadModal');
-    this.fetchRandomShabad();
-});
-
-this.addClickHandler('closeShabadModal', () => {
-    this.closeModal('shabadModal');
-});
-
-this.addClickHandler('newShabadBtn', () => {
-    this.fetchRandomShabad();
-});
-
-this.addClickHandler('copyShabadBtn', () => {
-    this.copyShabad();
-});
+        // Modals
+        this.addClickHandler('scheduleBtn', () => this.openModal('scheduleModal'));
+        this.addClickHandler('closeScheduleModal', () => this.closeModal('scheduleModal'));
+        this.addClickHandler('shareBtn', () => this.openModal('shareModal'));
+        this.addClickHandler('closeShareModal', () => this.closeModal('shareModal'));
 
         // Copy Link
         this.addClickHandler('copyLinkBtn', async () => {
@@ -1808,10 +1339,124 @@ this.addClickHandler('copyShabadBtn', () => {
             }
         });
 
+        // ═══════════════════════════════════════════════════════════════
+        // BENTO CARDS - NAVIGATION
+        // ═══════════════════════════════════════════════════════════════
+        
+        this.addClickHandler('DailyHukamnamaCard', () => {
+            console.log('[UI] ✅ Daily Hukamnama clicked');
+            window.location.href = 'Dialy-Hukamnama.html';
+        });
+        
+        this.addClickHandler('nitnemCard', () => {
+            console.log('[UI] ✅ Nitnem card clicked');
+            window.location.href = 'nitnem/indexbani.html';
+        });
+        
+        if (this.elements.calendarCard) {
+            this.elements.calendarCard.addEventListener('click', () => {
+                console.log('[UI] ✅ Calendar card clicked');
+                window.location.href = 'Gurupurab-Calendar.html';
+            });
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // NOTES MODAL
+        // ═══════════════════════════════════════════════════════════════
+        
+        this.addClickHandler('notesCard', () => {
+            console.log('[UI] ✅ Notes card clicked');
+            this.openNotesModal();
+        });
+
+        this.addClickHandler('notesClose', () => this.tryCloseNotes());
+
+        if (this.elements.notesOverlay) {
+            this.elements.notesOverlay.addEventListener('click', (e) => {
+                if (e.target === this.elements.notesOverlay) {
+                    this.tryCloseNotes();
+                }
+            });
+        }
+
+        this.addClickHandler('saveNotesBtn', () => {
+            this.saveNotes();
+            this.showNotesToast('Notes saved!');
+        });
+
+        this.addClickHandler('downloadNotesBtn', () => this.downloadNotes());
+        this.addClickHandler('clearNotesBtn', () => this.clearNotes());
+
+        if (this.elements.notesTextarea) {
+            this.elements.notesTextarea.addEventListener('input', () => {
+                this.updateNotesCharCount();
+                this.notesModified = (this.elements.notesTextarea.value !== this.notesOriginalContent);
+            });
+        }
+
+        this.addClickHandler('confirmSaveBtn', () => {
+            this.saveNotes();
+            this.hideNotesConfirm();
+            this.closeNotesModal();
+            this.showNotesToast('Notes saved!');
+        });
+
+        this.addClickHandler('confirmDiscardBtn', () => {
+            this.hideNotesConfirm();
+            this.closeNotesModal();
+        });
+
+        this.addClickHandler('confirmCancelBtn', () => this.hideNotesConfirm());
+
+        // ═══════════════════════════════════════════════════════════════
+        // RANDOM SHABAD MODAL
+        // ═══════════════════════════════════════════════════════════════
+        
+        this.addClickHandler('randomShabadCard', () => {
+            console.log('[UI] ✅ Random Shabad card clicked');
+            this.openShabadModal();
+        });
+
+        this.addClickHandler('shabadClose', () => this.closeShabadModal());
+
+        if (this.elements.shabadOverlay) {
+            this.elements.shabadOverlay.addEventListener('click', (e) => {
+                if (e.target === this.elements.shabadOverlay) {
+                    this.closeShabadModal();
+                }
+            });
+        }
+
+        this.addClickHandler('newShabadBtn', () => {
+            const icon = this.elements.newShabadBtn?.querySelector('i');
+            if (icon) icon.classList.add('fa-spin');
+            this.fetchRandomShabad();
+        });
+
+        this.addClickHandler('copyShabadBtn', () => this.copyShabad());
+        this.addClickHandler('shareShabadBtn', () => this.shareShabad());
+        this.addClickHandler('bookmarkShabadBtn', () => this.toggleShabadBookmark());
+        this.addClickHandler('shabadRetryBtn', () => this.fetchRandomShabad());
+
+        // Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (this.elements.notesOverlay?.classList.contains('active')) {
+                    this.tryCloseNotes();
+                }
+                if (this.elements.shabadOverlay?.classList.contains('active')) {
+                    this.closeShabadModal();
+                }
+                document.querySelectorAll('.modal.modal--open').forEach(modal => {
+                    this.closeModal(modal.id);
+                });
+            }
+        });
+
         // Share buttons
         this.setupShareButtons();
 
-        // Close modals on backdrop click
+        // Modal backdrop
         document.querySelectorAll('.modal').forEach(modal => {
             modal.addEventListener('click', (e) => {
                 if (e.target === modal) {
@@ -1819,208 +1464,321 @@ this.addClickHandler('copyShabadBtn', () => {
                 }
             });
         });
-        
-
-        // Close modals on Escape
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                document.querySelectorAll('.modal.modal--open').forEach(modal => {
-                    this.closeModal(modal.id);
-                });
-            }
-        });
     }
+
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // NOTES FUNCTIONS
+    // ═══════════════════════════════════════════════════════════════════════════════
+
+    openNotesModal() {
+        console.log('[UI] Opening Notes Modal');
+        const { notesOverlay } = this.elements;
+        if (notesOverlay) {
+            document.body.style.overflow = 'hidden';
+            notesOverlay.classList.add('active');
+            this.loadNotes();
+            setTimeout(() => this.elements.notesTextarea?.focus(), 100);
+        }
+    }
+
+    closeNotesModal() {
+        console.log('[UI] Closing Notes Modal');
+        const { notesOverlay } = this.elements;
+        if (notesOverlay) {
+            document.body.style.overflow = '';
+            notesOverlay.classList.remove('active');
+            this.notesModified = false;
+        }
+    }
+
+    tryCloseNotes() {
+        if (this.notesModified) {
+            this.showNotesConfirm();
+        } else {
+            this.closeNotesModal();
+        }
+    }
+
+    showNotesConfirm() {
+        const { notesConfirmOverlay } = this.elements;
+        if (notesConfirmOverlay) notesConfirmOverlay.classList.add('active');
+    }
+
+    hideNotesConfirm() {
+        const { notesConfirmOverlay } = this.elements;
+        if (notesConfirmOverlay) notesConfirmOverlay.classList.remove('active');
+    }
+
     loadNotes() {
-    const { notesTextarea } = this.elements;
-    if (notesTextarea) {
-        const savedNotes = Utils.storage.get('userNotes', '');
-        notesTextarea.value = savedNotes;
+        const { notesTextarea } = this.elements;
+        if (notesTextarea) {
+            const savedNotes = Utils.storage.get('userNotes', '');
+            notesTextarea.value = savedNotes;
+            this.notesOriginalContent = savedNotes;
+            this.notesModified = false;
+            this.updateNotesCharCount();
+        }
     }
-}
 
-saveNotes() {
-    const { notesTextarea } = this.elements;
-    if (notesTextarea) {
-        Utils.storage.set('userNotes', notesTextarea.value);
-        Utils.haptic('success');
-        this.showToast('📝 Notes saved!', 'success');
+    saveNotes() {
+        const { notesTextarea } = this.elements;
+        if (notesTextarea) {
+            Utils.storage.set('userNotes', notesTextarea.value);
+            this.notesOriginalContent = notesTextarea.value;
+            this.notesModified = false;
+            Utils.haptic('success');
+        }
     }
-}
 
-clearNotes() {
-    const { notesTextarea } = this.elements;
-    if (notesTextarea) {
-        if (confirm('Are you sure you want to clear all notes?')) {
+    clearNotes() {
+        const { notesTextarea } = this.elements;
+        if (notesTextarea && confirm('Are you sure you want to clear all notes?')) {
             notesTextarea.value = '';
             Utils.storage.remove('userNotes');
+            this.notesOriginalContent = '';
+            this.notesModified = false;
+            this.updateNotesCharCount();
             Utils.haptic('warning');
-            this.showToast('🗑️ Notes cleared', 'info');
+            this.showNotesToast('Notes cleared');
         }
     }
-}
-async fetchRandomShabad() {
-    const { shabadLoading, shabadContent, shabadError } = this.elements;
-    
-    // Show loading, hide others
-    if (shabadLoading) shabadLoading.style.display = 'flex';
-    if (shabadContent) shabadContent.style.display = 'none';
-    if (shabadError) shabadError.style.display = 'none';
-    
-    try {
-        // BaniDB API for random shabad
-        const response = await fetch('https://api.banidb.com/v2/random/1');
-        
-        if (!response.ok) {
-            throw new Error('API request failed');
+
+    downloadNotes() {
+        const { notesTextarea } = this.elements;
+        if (!notesTextarea || !notesTextarea.value.trim()) {
+            this.showNotesToast('No notes to download');
+            return;
         }
         
-        const data = await response.json();
-        
-        // Hide loading
-        if (shabadLoading) shabadLoading.style.display = 'none';
-        
-        // Display the shabad
-        this.displayShabad(data);
-        
-    } catch (error) {
-        console.error('[Shabad] Fetch error:', error);
-        
-        // Show error
-        if (shabadLoading) shabadLoading.style.display = 'none';
-        if (shabadError) shabadError.style.display = 'flex';
-    }
-}
-
-displayShabad(data) {
-    const { shabadContent, shabadAng, shabadGurmukhi, shabadTransliteration, shabadTranslation, shabadSource } = this.elements;
-    
-    if (!data || !data.shabadInfo) {
-        if (this.elements.shabadError) this.elements.shabadError.style.display = 'flex';
-        return;
-    }
-    
-    const shabadInfo = data.shabadInfo;
-    const verses = data.verses || [];
-    
-    // Combine all lines of the shabad
-    let gurmukhiText = '';
-    let translitText = '';
-    let translationText = '';
-    
-    verses.forEach(verse => {
-        // Use UNICODE field for proper Punjabi script (not gurmukhi field)
-        if (verse.verse && verse.verse.unicode) {
-            gurmukhiText += verse.verse.unicode + ' ';
-        }
-        
-        // English translation
-        if (verse.translation && verse.translation.en && verse.translation.en.bdb) {
-            translationText += verse.translation.en.bdb + ' ';
-        }
-        
-        // Transliteration
-        if (verse.transliteration && verse.transliteration.english) {
-            translitText += verse.transliteration.english + ' ';
-        }
-    });
-    
-    // Update Ang number
-    if (shabadAng) {
-        const angNum = shabadAng.querySelector('.shabad-ang__number');
-        if (angNum) {
-            angNum.textContent = shabadInfo.pageNo || '---';
-        }
-    }
-    
-    // Update Gurmukhi (now in proper Punjabi Unicode)
-    if (shabadGurmukhi) {
-        shabadGurmukhi.textContent = gurmukhiText.trim() || 'ਵਾਹਿਗੁਰੂ';
-    }
-    
-    // Update Transliteration
-    if (shabadTransliteration) {
-        shabadTransliteration.textContent = translitText.trim() || '';
-    }
-    
-    // Update Translation
-    if (shabadTranslation) {
-        shabadTranslation.textContent = translationText.trim() || 'May the Divine bless you.';
-    }
-    
-    // Update Source
-// Update Source
-if (shabadSource) {
-    // Raag with fallbacks
-    let raag = 'Unknown';
-    if (shabadInfo.raag) {
-        raag = shabadInfo.raag.unicode || shabadInfo.raag.english || shabadInfo.raag.gurmukhi || 'Unknown';
-    }
-    
-    // Writer with fallbacks
-    let writer = 'Unknown';
-    if (shabadInfo.writer) {
-        writer = shabadInfo.writer.unicode || shabadInfo.writer.english || shabadInfo.writer.gurmukhi || 'Unknown';
-    }
-    
-    // If still null or "null" string, set default
-    if (!raag || raag === 'null' || raag === null) {
-        raag = 'ਰਾਗ';
-    }
-    if (!writer || writer === 'null' || writer === null) {
-        writer = 'ਗੁਰੂ ਸਾਹਿਬ';
-    }
-    
-    shabadSource.innerHTML = `
-        <span><i class="fas fa-music"></i> ${raag}</span>
-        <span><i class="fas fa-feather"></i> ${writer}</span>
-        <span><i class="fas fa-book"></i> ਸ੍ਰੀ ਗੁਰੂ ਗ੍ਰੰਥ ਸਾਹਿਬ ਜੀ</span>
-    `;
-}
-    // Store for copy function
-    this.currentShabad = {
-        gurmukhi: gurmukhiText.trim(),
-        transliteration: translitText.trim(),
-        translation: translationText.trim(),
-        ang: shabadInfo.pageNo
-    };
-    
-    // Show content
-    if (shabadContent) shabadContent.style.display = 'flex';
-}
-
-copyShabad() {
-    if (!this.currentShabad) {
-        this.showToast('❌ No shabad to copy', 'error');
-        return;
-    }
-    
-    const textToCopy = `
-═══════════════════════════
-🙏 RANDOM SHABAD 🙏
-Ang: ${this.currentShabad.ang}
-═══════════════════════════
-
-${this.currentShabad.gurmukhi}
-
-${this.currentShabad.transliteration}
-
-${this.currentShabad.translation}
-
-═══════════════════════════
-Source: Sri Guru Granth Sahib Ji
-From: Gurbani Live Radio
-═══════════════════════════
-    `.trim();
-    
-    navigator.clipboard.writeText(textToCopy)
-        .then(() => {
-            Utils.haptic('success');
-            this.showToast('📋 Shabad copied!', 'success');
-        })
-        .catch(() => {
-            this.showToast('❌ Copy failed', 'error');
+        const date = new Date().toLocaleDateString('en-US', {
+            year: 'numeric', month: 'long', day: 'numeric'
         });
-}
+        
+        const content = `GURBANI RADIO - SACRED NOTES\nDate: ${date}\n================================\n\n${notesTextarea.value}\n\n================================\nWaheguru Ji Ka Khalsa, Waheguru Ji Ki Fateh`;
+
+        const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Gurbani-Notes-${new Date().toISOString().split('T')[0]}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        Utils.haptic('success');
+        this.showNotesToast('Notes downloaded!');
+    }
+
+    updateNotesCharCount() {
+        const { notesTextarea, notesCharCount } = this.elements;
+        if (notesTextarea && notesCharCount) {
+            notesCharCount.textContent = `${notesTextarea.value.length} / 5000`;
+        }
+    }
+
+    showNotesToast(message) {
+        const { notesToast, notesToastMessage } = this.elements;
+        if (notesToast && notesToastMessage) {
+            notesToastMessage.textContent = message;
+            notesToast.classList.add('show');
+            setTimeout(() => notesToast.classList.remove('show'), 2500);
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // SHABAD FUNCTIONS
+    // ═══════════════════════════════════════════════════════════════════════════════
+
+    openShabadModal() {
+        console.log('[UI] Opening Shabad Modal');
+        const { shabadOverlay } = this.elements;
+        if (shabadOverlay) {
+            document.body.style.overflow = 'hidden';
+            shabadOverlay.classList.add('active');
+            setTimeout(() => this.elements.shabadClose?.focus(), 100);
+            this.fetchRandomShabad();
+        }
+    }
+
+    closeShabadModal() {
+        console.log('[UI] Closing Shabad Modal');
+        const { shabadOverlay } = this.elements;
+        if (shabadOverlay) {
+            document.body.style.overflow = '';
+            shabadOverlay.classList.remove('active');
+            const icon = this.elements.newShabadBtn?.querySelector('i');
+            if (icon) icon.classList.remove('fa-spin');
+        }
+    }
+
+    async fetchRandomShabad() {
+        console.log('[UI] Fetching Random Shabad...');
+        const { shabadLoading, shabadContent, shabadError, newShabadBtn } = this.elements;
+        
+        if (shabadLoading) shabadLoading.style.display = 'flex';
+        if (shabadContent) shabadContent.style.display = 'none';
+        if (shabadError) shabadError.style.display = 'none';
+        
+        try {
+            const response = await fetch('https://api.banidb.com/v2/random/1');
+            if (!response.ok) throw new Error('API request failed');
+            
+            const data = await response.json();
+            console.log('[UI] ✅ Shabad data received');
+            
+            if (shabadLoading) shabadLoading.style.display = 'none';
+            const icon = newShabadBtn?.querySelector('i');
+            if (icon) icon.classList.remove('fa-spin');
+            
+            this.displayShabad(data);
+            
+        } catch (error) {
+            console.error('[Shabad] Fetch error:', error);
+            if (shabadLoading) shabadLoading.style.display = 'none';
+            if (shabadError) shabadError.style.display = 'flex';
+            const icon = newShabadBtn?.querySelector('i');
+            if (icon) icon.classList.remove('fa-spin');
+        }
+    }
+
+    displayShabad(data) {
+        const { shabadContent, shabadAngNumber, shabadGurmukhi, 
+                shabadTransliteration, shabadTranslation, shabadSource, shabadError } = this.elements;
+        
+        if (!data || !data.shabadInfo) {
+            if (shabadError) shabadError.style.display = 'flex';
+            return;
+        }
+        
+        const shabadInfo = data.shabadInfo;
+        const verses = data.verses || [];
+        
+        let gurmukhiText = '';
+        let translitText = '';
+        let translationText = '';
+        
+        verses.forEach(verse => {
+            if (verse.verse?.unicode) gurmukhiText += verse.verse.unicode + ' ';
+            if (verse.translation?.en?.bdb) translationText += verse.translation.en.bdb + ' ';
+            if (verse.transliteration?.english) translitText += verse.transliteration.english + ' ';
+        });
+        
+        if (shabadAngNumber) shabadAngNumber.textContent = shabadInfo.pageNo || '---';
+        if (shabadGurmukhi) shabadGurmukhi.textContent = gurmukhiText.trim() || 'ਵਾਹਿਗੁਰੂ';
+        if (shabadTransliteration) shabadTransliteration.textContent = translitText.trim() || '';
+        if (shabadTranslation) shabadTranslation.textContent = translationText.trim() || 'May the Divine bless you.';
+        
+        if (shabadSource) {
+            let raag = shabadInfo.raag?.unicode || shabadInfo.raag?.english || 'ਰਾਗ';
+            let writer = shabadInfo.writer?.unicode || shabadInfo.writer?.english || 'ਗੁਰੂ ਸਾਹਿਬ';
+            if (!raag || raag === 'null') raag = 'ਰਾਗ';
+            if (!writer || writer === 'null') writer = 'ਗੁਰੂ ਸਾਹਿਬ';
+            
+            shabadSource.innerHTML = `
+                <span><i class="fas fa-music"></i> ${raag}</span>
+                <span><i class="fas fa-feather"></i> ${writer}</span>
+            `;
+        }
+        
+        this.currentShabad = {
+            gurmukhi: gurmukhiText.trim(),
+            transliteration: translitText.trim(),
+            translation: translationText.trim(),
+            ang: shabadInfo.pageNo,
+            raag: shabadInfo.raag?.english || 'Unknown',
+            writer: shabadInfo.writer?.english || 'Unknown'
+        };
+        
+        this.shabadBookmarked = false;
+        this.updateBookmarkButton();
+        
+        if (shabadContent) shabadContent.style.display = 'flex';
+    }
+
+    copyShabad() {
+        if (!this.currentShabad) {
+            this.showToast('❌ No shabad to copy', 'error');
+            return;
+        }
+        
+        const textToCopy = `🙏 RANDOM SHABAD - Ang ${this.currentShabad.ang}\n\n${this.currentShabad.gurmukhi}\n\n${this.currentShabad.transliteration}\n\n${this.currentShabad.translation}\n\n— From Gurbani Live Radio`;
+        
+        navigator.clipboard.writeText(textToCopy)
+            .then(() => {
+                Utils.haptic('success');
+                this.showToast('📋 Shabad copied!', 'success');
+                const icon = this.elements.copyShabadBtn?.querySelector('i');
+                if (icon) {
+                    icon.classList.remove('fa-copy');
+                    icon.classList.add('fa-check');
+                    setTimeout(() => {
+                        icon.classList.remove('fa-check');
+                        icon.classList.add('fa-copy');
+                    }, 2000);
+                }
+            })
+            .catch(() => this.showToast('❌ Copy failed', 'error'));
+    }
+
+    async shareShabad() {
+        if (!this.currentShabad) {
+            this.showToast('❌ No shabad to share', 'error');
+            return;
+        }
+        
+        const shareData = {
+            title: 'Divine Shabad - Gurbani Live Radio',
+            text: `${this.currentShabad.translation}\n\n— Ang ${this.currentShabad.ang}`,
+            url: window.location.href
+        };
+        
+        if (navigator.share) {
+            try {
+                await navigator.share(shareData);
+                Utils.haptic('success');
+            } catch (error) {
+                if (error.name !== 'AbortError') this.copyShabad();
+            }
+        } else {
+            this.copyShabad();
+        }
+    }
+
+    toggleShabadBookmark() {
+        this.shabadBookmarked = !this.shabadBookmarked;
+        this.updateBookmarkButton();
+        
+        if (this.shabadBookmarked && this.currentShabad) {
+            const bookmarks = Utils.storage.get('shabadBookmarks', []);
+            bookmarks.push({ ...this.currentShabad, savedAt: new Date().toISOString() });
+            Utils.storage.set('shabadBookmarks', bookmarks);
+            Utils.haptic('success');
+            this.showToast('❤️ Shabad saved!', 'success');
+        } else {
+            this.showToast('💔 Shabad removed', 'info');
+        }
+    }
+
+    updateBookmarkButton() {
+        const btn = this.elements.bookmarkShabadBtn;
+        if (!btn) return;
+        
+        const icon = btn.querySelector('i');
+        if (this.shabadBookmarked) {
+            icon?.classList.remove('far');
+            icon?.classList.add('fas');
+            btn.classList.add('active');
+        } else {
+            icon?.classList.remove('fas');
+            icon?.classList.add('far');
+            btn.classList.remove('active');
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // SHARE & MODALS
+    // ═══════════════════════════════════════════════════════════════════════════════
 
     setupShareButtons() {
         const shareUrl = encodeURIComponent(window.location.href);
@@ -2037,7 +1795,6 @@ From: Gurbani Live Radio
             this.addClickHandler(id, () => {
                 window.open(url, '_blank', 'width=600,height=400');
                 Utils.haptic('light');
-                this.showToast('📤 Opening share...', 'info');
             });
         });
     }
@@ -2046,34 +1803,70 @@ From: Gurbani Live Radio
         const element = this.elements[elementId];
         if (element) {
             element.addEventListener('click', handler);
+        } else {
+            console.warn(`[UI] Element not found: ${elementId}`);
         }
     }
 
+    openModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            if (typeof modal.showModal === 'function') modal.showModal();
+            modal.classList.add('modal--open');
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    closeModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.classList.remove('modal--open');
+            if (typeof modal.close === 'function') modal.close();
+            document.body.style.overflow = '';
+        }
+    }
+
+    toggleVolumePopup() {
+        const { volumePopup } = this.elements;
+        if (volumePopup) {
+            const isVisible = volumePopup.getAttribute('data-visible') === 'true';
+            volumePopup.setAttribute('data-visible', !isVisible);
+        }
+    }
+
+    toggleFavorite() {
+        const { favoriteBtn } = this.elements;
+        if (!favoriteBtn) return;
+
+        const isFavorited = favoriteBtn.classList.toggle('control-btn--favorited');
+        const icon = favoriteBtn.querySelector('i');
+        if (icon) icon.className = isFavorited ? 'fas fa-heart' : 'far fa-heart';
+        this.showToast(isFavorited ? '❤️ Added to favorites' : '💔 Removed', 'success');
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // PROGRESS BAR
+    // ═══════════════════════════════════════════════════════════════════════════════
+
     setupProgressBar() {
-        const { progressContainer, progressFill, progressGlow, progressScrubber } = this.elements;
+        const progressContainer = this.elements.progressTrack;
         if (!progressContainer) return;
 
+        const { progressFill, progressScrubber } = this.elements;
         let isDragging = false;
-        let wasPlaying = false;
 
         const updateProgressFromEvent = (e) => {
             const rect = progressContainer.getBoundingClientRect();
             const clientX = e.touches ? e.touches[0].clientX : e.clientX;
             const percent = Utils.clamp((clientX - rect.left) / rect.width * 100, 0, 100);
-            
             if (progressFill) progressFill.style.width = `${percent}%`;
-            if (progressGlow) progressGlow.style.left = `${percent}%`;
             if (progressScrubber) progressScrubber.style.left = `${percent}%`;
-            
             return percent;
         };
 
         const handleStart = (e) => {
             isDragging = true;
             this.isDraggingProgress = true;
-            wasPlaying = this.audio.isPlaying;
-            progressContainer.classList.add('progress--dragging');
-            if (progressScrubber) progressScrubber.classList.add('progress-scrubber--visible');
             Utils.haptic('light');
             updateProgressFromEvent(e);
         };
@@ -2088,27 +1881,17 @@ From: Gurbani Live Radio
             if (!isDragging) return;
             isDragging = false;
             this.isDraggingProgress = false;
-            
             const percent = updateProgressFromEvent(e.changedTouches ? e.changedTouches[0] : e);
             this.audio.seek(percent);
-            
-            progressContainer.classList.remove('progress--dragging');
-            setTimeout(() => {
-                if (progressScrubber) progressScrubber.classList.remove('progress-scrubber--visible');
-            }, 200);
         };
 
-        // Mouse events
         progressContainer.addEventListener('mousedown', handleStart);
         document.addEventListener('mousemove', handleMove);
         document.addEventListener('mouseup', handleEnd);
-
-        // Touch events
         progressContainer.addEventListener('touchstart', handleStart, { passive: false });
         document.addEventListener('touchmove', handleMove, { passive: false });
         document.addEventListener('touchend', handleEnd);
 
-        // Click to seek
         progressContainer.addEventListener('click', (e) => {
             if (!isDragging) {
                 const rect = progressContainer.getBoundingClientRect();
@@ -2117,46 +1900,10 @@ From: Gurbani Live Radio
                 Utils.haptic('light');
             }
         });
-
-        // Hover effects
-        progressContainer.addEventListener('mouseenter', () => {
-            if (progressScrubber) progressScrubber.classList.add('progress-scrubber--visible');
-        });
-
-        progressContainer.addEventListener('mouseleave', () => {
-            if (!isDragging && progressScrubber) {
-                progressScrubber.classList.remove('progress-scrubber--visible');
-            }
-        });
     }
 
-    setupMagneticButtons() {
-        // ═══ COMPLETELY DISABLE ON MOBILE ═══
-        if (isMobile || Utils.isTouchDevice() || Utils.prefersReducedMotion()) {
-            console.log('[UI] Magnetic buttons disabled on mobile');
-            return;
-        }
-
-        const magneticButtons = document.querySelectorAll('.control-btn');
-        
-        magneticButtons.forEach(btn => {
-            btn.addEventListener('mousemove', (e) => {
-                const rect = btn.getBoundingClientRect();
-                const x = e.clientX - rect.left - rect.width / 2;
-                const y = e.clientY - rect.top - rect.height / 2;
-                
-                const strength = 0.15;
-                btn.style.transform = `translate(${x * strength}px, ${y * strength}px)`;
-            });
-
-            btn.addEventListener('mouseleave', () => {
-                btn.style.transform = '';
-            });
-        });
-    }
     setupKeyboardShortcuts() {
         document.addEventListener('keydown', (e) => {
-            // Don't trigger if typing in input
             if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
             switch (e.key.toLowerCase()) {
@@ -2166,66 +1913,28 @@ From: Gurbani Live Radio
                     this.audio.toggle();
                     break;
                 case 'arrowright':
-                case 'l':
                     e.preventDefault();
-                    if (e.shiftKey) {
-                        this.audio.next();
-                    } else {
-                        this.audio.seek(this.audio.currentTime + 10, true);
-                    }
+                    if (e.shiftKey) this.audio.next();
+                    else this.audio.seek(this.audio.currentTime + 10, true);
                     break;
                 case 'arrowleft':
-                case 'j':
                     e.preventDefault();
-                    if (e.shiftKey) {
-                        this.audio.previous();
-                    } else {
-                        this.audio.seek(this.audio.currentTime - 10, true);
-                    }
-                    break;
-                case 'arrowup':
-                    e.preventDefault();
-                    this.audio.setVolume(Math.min(1, this.audio.volume + 0.1));
-                    this.updateVolumeUI(this.audio.volume);
-                    break;
-                case 'arrowdown':
-                    e.preventDefault();
-                    this.audio.setVolume(Math.max(0, this.audio.volume - 0.1));
-                    this.updateVolumeUI(this.audio.volume);
+                    if (e.shiftKey) this.audio.previous();
+                    else this.audio.seek(this.audio.currentTime - 10, true);
                     break;
                 case 'm':
                     e.preventDefault();
                     this.audio.toggleMute();
                     break;
-                case 's':
-                    e.preventDefault();
-                    this.audio.toggleShuffle();
-                    this.updateShuffleButton(this.audio.shuffle);
-                    break;
-                case 'r':
-                    e.preventDefault();
-                    const mode = this.audio.cycleRepeat();
-                    this.updateRepeatButton(mode);
-                    break;
-                case 'f':
-                    e.preventDefault();
-                    this.toggleFavorite();
-                    break;
                 case 'g':
                     e.preventDefault();
                     this.audio.goLive();
-                    break;
-                case '0':
-                case 'home':
-                    e.preventDefault();
-                    this.audio.seek(0);
                     break;
             }
         });
     }
 
     setupAudioEventListeners() {
-        // Time updates
         this.audio.on('timeupdate', (data) => {
             if (!this.isDraggingProgress) {
                 this.updateProgress(data.progress);
@@ -2233,34 +1942,16 @@ From: Gurbani Live Radio
             }
         });
 
-        // Track changes
-        this.audio.on('trackchange', (info) => {
-            this.updateTrackInfo(info);
-            this.updateAlbumArt(info.index);
-        });
-
-        // Playing state
         this.audio.on('playing', (info) => {
             this.updatePlayButton(true);
-            this.updateTrackInfo(info);
             this.activatePlayerGlow();
-            
-            if ('mediaSession' in navigator) {
-                navigator.mediaSession.playbackState = 'playing';
-            }
         });
 
-        // Paused state
         this.audio.on('paused', () => {
             this.updatePlayButton(false);
             this.deactivatePlayerGlow();
-            
-            if ('mediaSession' in navigator) {
-                navigator.mediaSession.playbackState = 'paused';
-            }
         });
 
-        // Stopped
         this.audio.on('stopped', () => {
             this.updatePlayButton(false);
             this.updateProgress(0);
@@ -2268,93 +1959,30 @@ From: Gurbani Live Radio
             this.deactivatePlayerGlow();
         });
 
-        // Loading states
-        this.audio.on('loading', () => {
-            this.setLoadingState(true);
-        });
+        this.audio.on('loading', () => this.setLoadingState(true));
+        this.audio.on('canplay', () => this.setLoadingState(false));
+        this.audio.on('buffering', () => this.setLoadingState(true));
+        this.audio.on('volumechange', (data) => this.updateVolumeUI(data.volume));
+        this.audio.on('liveStatusChange', (data) => this.updateLiveStatus(data.isLive));
 
-        this.audio.on('canplay', () => {
-            this.setLoadingState(false);
-        });
-
-        this.audio.on('buffering', () => {
-            this.setLoadingState(true);
-        });
-
-        // Volume changes
-        this.audio.on('volumechange', (data) => {
-            this.updateVolumeUI(data.volume);
-        });
-
-        // Mute changes
-        this.audio.on('mutechange', (data) => {
-            this.updateMuteButton(data.muted);
-        });
-
-        // Shuffle changes
-        this.audio.on('shufflechange', (data) => {
-            this.updateShuffleButton(data.shuffle);
-        });
-
-        // Repeat changes
-        this.audio.on('repeatchange', (data) => {
-            this.updateRepeatButton(data.repeat);
-        });
-
-        // Live status
-        this.audio.on('liveStatusChange', (data) => {
-            this.updateLiveStatus(data.isLive);
-        });
-
-        // Errors
         this.audio.on('error', (error) => {
             this.setLoadingState(false);
             if (error.type !== 'permission') {
                 this.showToast(`⚠️ ${error.message}`, 'error');
             }
         });
-
-        // Beat detection for visual feedback
-        this.audio.on('beat', (data) => {
-            this.onBeat(data.intensity);
-        });
-
-        // Buffer progress
-        this.audio.on('bufferprogress', (data) => {
-            this.updateBufferProgress(data.percent);
-        });
     }
 
     loadSavedState() {
-        // Volume
         const savedVolume = Utils.storage.get('volume', 0.8);
         this.audio.setVolume(savedVolume);
         this.updateVolumeUI(savedVolume);
-
-        // Shuffle
-        const savedShuffle = Utils.storage.get('shuffle', false);
-        this.audio.shuffle = savedShuffle;
-        this.updateShuffleButton(savedShuffle);
-
-        // Repeat
-        const savedRepeat = Utils.storage.get('repeat', 'all');
-        this.audio.repeat = savedRepeat;
-        this.updateRepeatButton(savedRepeat);
-
-        // Last track
-        const lastTrack = Utils.storage.get('lastTrackIndex', 0);
-        this.audio.currentTrackIndex = lastTrack;
+        this.audio.currentTrackIndex = Utils.storage.get('lastTrackIndex', 0);
     }
 
     updatePlayButton(isPlaying) {
         const { playBtn, playIcon } = this.elements;
-        
-        if (playBtn) {
-            playBtn.classList.toggle('control-btn--playing', isPlaying);
-            playBtn.setAttribute('aria-label', isPlaying ? 'Pause' : 'Play');
-            playBtn.setAttribute('aria-pressed', isPlaying);
-        }
-
+        if (playBtn) playBtn.classList.toggle('control-btn--playing', isPlaying);
         if (playIcon) {
             playIcon.classList.remove('fa-play', 'fa-pause');
             playIcon.classList.add(isPlaying ? 'fa-pause' : 'fa-play');
@@ -2362,110 +1990,24 @@ From: Gurbani Live Radio
     }
 
     updateProgress(percent) {
-        const { progressFill, progressGlow, progressScrubber } = this.elements;
-        const clampedPercent = Utils.clamp(percent, 0, 100);
-        
-        if (progressFill) progressFill.style.width = `${clampedPercent}%`;
-        if (progressGlow) progressGlow.style.left = `${clampedPercent}%`;
-        if (progressScrubber) progressScrubber.style.left = `${clampedPercent}%`;
-    }
-
-    updateBufferProgress(percent) {
-        const bufferBar = document.querySelector('.progress-buffer');
-        if (bufferBar) {
-            bufferBar.style.width = `${percent}%`;
-        }
+        const { progressFill, progressScrubber } = this.elements;
+        const clamped = Utils.clamp(percent, 0, 100);
+        if (progressFill) progressFill.style.width = `${clamped}%`;
+        if (progressScrubber) progressScrubber.style.left = `${clamped}%`;
     }
 
     updateTimeDisplay(current, duration) {
         const { currentTime, totalTime } = this.elements;
-        
         if (currentTime) currentTime.textContent = Utils.formatTime(current);
         if (totalTime) totalTime.textContent = Utils.formatTime(duration);
-    }
-
-    updateTrackInfo(info) {
-        const { shabadTitle, shabadArtist, trackNumber } = this.elements;
-        
-        if (shabadTitle) {
-            shabadTitle.textContent = info.title || 'Divine Shabad';
-            shabadTitle.classList.add('track-info--updated');
-            setTimeout(() => shabadTitle.classList.remove('track-info--updated'), 500);
-        }
-        
-        if (shabadArtist) {
-            shabadArtist.textContent = info.artist || 'Sacred Kirtan';
-        }
-        
-        if (trackNumber) {
-            trackNumber.textContent = `${info.index + 1} / ${info.total}`;
-        }
-
-        // Update document title
-        document.title = `${info.title} | Gurbani Radio`;
-
-        // Update Media Session
-        this.updateMediaSession(info);
-    }
-
-    updateMediaSession(info) {
-        if ('mediaSession' in navigator) {
-            navigator.mediaSession.metadata = new MediaMetadata({
-                title: info.title,
-                artist: info.artist,
-                album: 'Gurbani Radio - 24/7 Kirtan',
-                artwork: [
-                    { src: '/images/icon-96.png', sizes: '96x96', type: 'image/png' },
-                    { src: '/images/icon-192.png', sizes: '192x192', type: 'image/png' },
-                    { src: '/images/icon-512.png', sizes: '512x512', type: 'image/png' }
-                ]
-            });
-
-            navigator.mediaSession.setActionHandler('play', () => this.audio.play());
-            navigator.mediaSession.setActionHandler('pause', () => this.audio.pause());
-            navigator.mediaSession.setActionHandler('previoustrack', () => this.audio.previous());
-            navigator.mediaSession.setActionHandler('nexttrack', () => this.audio.next());
-            navigator.mediaSession.setActionHandler('seekto', (details) => {
-                if (details.seekTime) this.audio.seek(details.seekTime, true);
-            });
-        }
-    }
-
-    updateAlbumArt(trackIndex) {
-        const { sacredImage, sacredGlow } = this.elements;
-        
-        // Animate on track change
-        if (sacredImage) {
-            sacredImage.style.transform = 'scale(0.95)';
-            sacredImage.style.opacity = '0.7';
-            
-            setTimeout(() => {
-                sacredImage.style.transform = 'scale(1)';
-                sacredImage.style.opacity = '1';
-            }, 200);
-        }
-
-        // Pulse the glow
-        if (sacredGlow) {
-            sacredGlow.style.opacity = '1';
-            sacredGlow.style.transform = 'translate(-50%, -50%) scale(1.2)';
-            
-            setTimeout(() => {
-                sacredGlow.style.opacity = '';
-                sacredGlow.style.transform = '';
-            }, 400);
-        }
     }
 
     updateVolumeUI(volume) {
         const { volumeSlider, volumeValue, volumeFill, volumeBtn } = this.elements;
         const percent = Math.round(volume * 100);
-        
         if (volumeSlider) volumeSlider.value = percent;
         if (volumeValue) volumeValue.textContent = `${percent}%`;
         if (volumeFill) volumeFill.style.width = `${percent}%`;
-
-        // Update volume icon
         if (volumeBtn) {
             const icon = volumeBtn.querySelector('i');
             if (icon) {
@@ -2478,95 +2020,9 @@ From: Gurbani Live Radio
         }
     }
 
-    updateMuteButton(isMuted) {
-        const { volumeBtn } = this.elements;
-        if (volumeBtn) {
-            volumeBtn.classList.toggle('control-btn--muted', isMuted);
-            const icon = volumeBtn.querySelector('i');
-            if (icon && isMuted) {
-                icon.className = 'fas fa-volume-mute';
-            }
-        }
-    }
-
-    updateShuffleButton(isShuffled) {
-        const { shuffleBtn } = this.elements;
-        if (shuffleBtn) {
-            shuffleBtn.classList.toggle('control-btn--active', isShuffled);
-            shuffleBtn.setAttribute('aria-pressed', isShuffled);
-        }
-    }
-
-    updateRepeatButton(mode) {
-        const { repeatBtn } = this.elements;
-        if (repeatBtn) {
-            repeatBtn.classList.remove('control-btn--active', 'control-btn--repeat-one');
-            
-            if (mode === 'all') {
-                repeatBtn.classList.add('control-btn--active');
-            } else if (mode === 'one') {
-                repeatBtn.classList.add('control-btn--active', 'control-btn--repeat-one');
-            }
-
-            const icon = repeatBtn.querySelector('i');
-            if (icon) {
-                icon.className = 'fas ' + (mode === 'one' ? 'fa-repeat-1' : 'fa-repeat');
-            }
-            
-            repeatBtn.setAttribute('aria-label', `Repeat: ${mode}`);
-        }
-    }
-
-    toggleVolumePopup() {
-    const { volumePopup } = this.elements;
-    if (volumePopup) {
-        const isVisible = volumePopup.getAttribute('data-visible') === 'true';
-        volumePopup.setAttribute('data-visible', !isVisible);
-        volumePopup.classList.toggle('volume-popup--visible', !isVisible);
-    }
-}
-    toggleFavorite() {
-        const { favoriteBtn } = this.elements;
-        if (!favoriteBtn) return;
-
-        const isFavorited = favoriteBtn.classList.toggle('control-btn--favorited');
-        const icon = favoriteBtn.querySelector('i');
-        
-        if (icon) {
-            icon.className = isFavorited ? 'fas fa-heart' : 'far fa-heart';
-        }
-
-        // Save to favorites
-        const favorites = Utils.storage.get('favorites', []);
-        const currentTrack = this.audio.currentTrackIndex;
-        
-        if (isFavorited) {
-            if (!favorites.includes(currentTrack)) {
-                favorites.push(currentTrack);
-            }
-            this.showToast('❤️ Added to favorites', 'success');
-        } else {
-            const idx = favorites.indexOf(currentTrack);
-            if (idx > -1) favorites.splice(idx, 1);
-            this.showToast('💔 Removed from favorites', 'info');
-        }
-        
-        Utils.storage.set('favorites', favorites);
-    }
-
-    showTrackInfo() {
-        const info = this.audio.getCurrentTrackInfo();
-        const message = `🎵 Track ${info.index + 1}/${info.total}\n${info.title}`;
-        this.showToast(message, 'info', 4000);
-    }
-
     setLoadingState(isLoading) {
         const { playBtn, playIcon } = this.elements;
-        
-        if (playBtn) {
-            playBtn.classList.toggle('control-btn--loading', isLoading);
-        }
-
+        if (playBtn) playBtn.classList.toggle('control-btn--loading', isLoading);
         if (playIcon && isLoading) {
             playIcon.classList.remove('fa-play', 'fa-pause');
             playIcon.classList.add('fa-spinner', 'fa-spin');
@@ -2577,80 +2033,18 @@ From: Gurbani Live Radio
     }
 
     activatePlayerGlow() {
-        const { sacredGlow, playerCard, sacredFrame } = this.elements;
-        
-        if (sacredGlow) {
-            sacredGlow.style.animation = 'glow-pulse-active 3s ease-in-out infinite';
-        }
-
-        if (playerCard) {
-            playerCard.classList.add('player__card--playing');
-        }
-
-        if (sacredFrame) {
-            sacredFrame.classList.add('sacred-frame--playing');
-        }
+        const { playerCard } = this.elements;
+        if (playerCard) playerCard.classList.add('player__card--playing');
     }
 
     deactivatePlayerGlow() {
-        const { sacredGlow, playerCard, sacredFrame } = this.elements;
-        
-        if (sacredGlow) {
-            sacredGlow.style.animation = '';
-        }
-
-        if (playerCard) {
-            playerCard.classList.remove('player__card--playing');
-        }
-
-        if (sacredFrame) {
-            sacredFrame.classList.remove('sacred-frame--playing');
-        }
+        const { playerCard } = this.elements;
+        if (playerCard) playerCard.classList.remove('player__card--playing');
     }
 
-    onBeat(intensity) {
-        // Quality bars beat animation
-        if (this.elements.qualityBars) {
-            this.elements.qualityBars.forEach((bar, i) => {
-                bar.style.transform = `scaleY(${1 + intensity * (0.3 + i * 0.1)})`;
-                setTimeout(() => {
-                    bar.style.transform = '';
-                }, 100);
-            });
-        }
-    }
-    openModal(modalId) {
-    const modal = document.getElementById(modalId);
-    if (modal && typeof modal.showModal === 'function') {
-        modal.showModal();
-        modal.classList.add('modal--open');
-        document.body.style.overflow = 'hidden';
-        
-        requestAnimationFrame(() => {
-            modal.querySelector('.modal__container')?.classList.add('modal__container--visible');
-        });
-    }
-}
-    closeModal(modalId) {
-    const modal = document.getElementById(modalId);
-    if (modal) {
-        modal.querySelector('.modal__container')?.classList.remove('modal__container--visible');
-        
-        setTimeout(() => {
-            modal.classList.remove('modal--open');
-            if (typeof modal.close === 'function') {
-                modal.close();
-            }
-            document.body.style.overflow = '';
-        }, 300);
-    }
-}
     showToast(message, type = 'info', duration = 3000) {
         this.toastQueue.push({ message, type, duration });
-        
-        if (!this.isShowingToast) {
-            this.processToastQueue();
-        }
+        if (!this.isShowingToast) this.processToastQueue();
     }
 
     processToastQueue() {
@@ -2661,64 +2055,45 @@ From: Gurbani Live Radio
 
         this.isShowingToast = true;
         const { message, type, duration } = this.toastQueue.shift();
-
-        const { toast, toastMessage, toastIcon } = this.elements;
-        
+        const { toast } = this.elements;
         if (!toast) {
             this.isShowingToast = false;
             return;
         }
 
-        // Set content
-        if (toastMessage) toastMessage.textContent = message;
+        const toastMessage = toast.querySelector('.toast__message');
+        const toastIcon = toast.querySelector('.toast__icon i');
         
-        // Set icon based on type
+        if (toastMessage) toastMessage.textContent = message;
         if (toastIcon) {
-            const icons = {
-                success: 'fa-check-circle',
-                error: 'fa-exclamation-circle',
-                warning: 'fa-exclamation-triangle',
-                info: 'fa-info-circle'
-            };
+            const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', warning: 'fa-exclamation-triangle', info: 'fa-info-circle' };
             toastIcon.className = `fas ${icons[type] || icons.info}`;
         }
 
-        // Set type class
         toast.className = `toast toast--${type}`;
-        
-        // Animate in
-        requestAnimationFrame(() => {
-            toast.classList.add('toast--visible');
-        });
+        requestAnimationFrame(() => toast.classList.add('toast--visible'));
 
-        // Auto hide
         setTimeout(() => {
             toast.classList.remove('toast--visible');
-            setTimeout(() => {
-                this.processToastQueue();
-            }, 300);
+            setTimeout(() => this.processToastQueue(), 300);
         }, duration);
     }
 
-hideLoadingScreen() {
-    const { loadingScreen } = this.elements;
-    
-    if (loadingScreen) {
-        // Immediately hide - no delay
-        loadingScreen.classList.add('hidden');
-        loadingScreen.style.display = 'none';
+    hideLoadingScreen() {
+        const { loadingScreen } = this.elements;
+        if (loadingScreen) {
+            loadingScreen.classList.add('hidden');
+            loadingScreen.style.display = 'none';
+        }
     }
-}
 
     destroy() {
-        if (this.listenerUpdateInterval) {
-            clearInterval(this.listenerUpdateInterval);
-        }
+        if (this.listenerUpdateInterval) clearInterval(this.listenerUpdateInterval);
     }
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// MAIN APPLICATION CLASS
+// MAIN APPLICATION
 // ═══════════════════════════════════════════════════════════════════════════════
 
 class GurbaniRadioApp {
@@ -2726,10 +2101,8 @@ class GurbaniRadioApp {
         this.stateManager = new StateManager({
             isReady: false,
             isPlaying: false,
-            currentTrack: null,
             volume: 0.8,
-            isLive: true,
-            theme: 'dark'
+            isLive: true
         });
 
         this.audioEngine = null;
@@ -2747,43 +2120,26 @@ class GurbaniRadioApp {
         try {
             console.log('[GurbaniRadio] Initializing application...');
 
-            // Initialize Audio Engine
             this.audioEngine = new AudioEngine({
                 autoPlay: true,
                 virtualLive: true,
                 fftSize: 256
             });
 
-            // Initialize UI Controller
             this.uiController = new UIController(this.audioEngine, this.stateManager);
 
-            // Initialize Visualizer
             this.visualizer = new VisualizerEngine(this.audioEngine, {
                 barCount: 12,
-                sensitivity: 1.8,
-                smoothing: 0.75
+                sensitivity: 1.8
             });
 
-            // Initialize Particles
             const particleContainer = document.getElementById('particles');
             if (particleContainer) {
-                this.particles = new ParticleSystem(particleContainer, {
-                    count: 40,
-                    colors: ['#FFD700', '#FFA500', '#FF8C00', '#DAA520', '#F4E04D'],
-                    glowEnabled: true
-                });
+                this.particles = new ParticleSystem(particleContainer, { count: 40 });
             }
 
-            // Setup resize handler
-            this.setupResizeHandler();
+            this.setupHandlers();
 
-            // Setup visibility change handler
-            this.setupVisibilityHandler();
-
-            // Setup offline handler
-            this.setupOfflineHandler();
-
-            // Mark as initialized
             this.isInitialized = true;
             this.stateManager.setState({ isReady: true });
 
@@ -2791,33 +2147,18 @@ class GurbaniRadioApp {
 
         } catch (error) {
             console.error('[GurbaniRadio] ❌ Initialization failed:', error);
-            this.handleInitError(error);
         }
     }
 
-    setupResizeHandler() {
-        const debouncedResize = Utils.debounce(() => {
-            // Handle responsive adjustments
-            const isMobile = window.innerWidth < 768;
-            document.body.classList.toggle('is-mobile', isMobile);
-        }, 250);
-
-        window.addEventListener('resize', debouncedResize);
-    }
-
-    setupVisibilityHandler() {
+    setupHandlers() {
         document.addEventListener('visibilitychange', () => {
             if (document.hidden) {
-                // Pause particles when tab is hidden
                 if (this.particles) this.particles.pause();
             } else {
-                // Resume particles when tab is visible
                 if (this.particles) this.particles.resume();
             }
         });
-    }
 
-    setupOfflineHandler() {
         window.addEventListener('online', () => {
             this.uiController?.showToast('🌐 Back online!', 'success');
         });
@@ -2827,54 +2168,12 @@ class GurbaniRadioApp {
         });
     }
 
-    handleInitError(error) {
-        const errorContainer = document.createElement('div');
-        errorContainer.className = 'init-error';
-        errorContainer.innerHTML = `
-            <div class="init-error__content">
-                <i class="fas fa-exclamation-triangle"></i>
-                <h2>Unable to Initialize</h2>
-                <p>${error.message || 'An unexpected error occurred'}</p>
-                <button onclick="location.reload()">Retry</button>
-            </div>
-        `;
-        errorContainer.style.cssText = `
-            position: fixed;
-            inset: 0;
-            background: rgba(13, 6, 24, 0.95);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 99999;
-            color: white;
-            text-align: center;
-            font-family: system-ui, sans-serif;
-        `;
-        document.body.appendChild(errorContainer);
-    }
-
-    async play() {
-        await this.audioEngine?.play();
-    }
-
-    pause() {
-        this.audioEngine?.pause();
-    }
-
-    async toggle() {
-        await this.audioEngine?.toggle();
-    }
-
     destroy() {
-        console.log('[GurbaniRadio] Destroying application...');
-        
         this.audioEngine?.destroy();
         this.visualizer?.destroy();
         this.particles?.destroy();
         this.uiController?.destroy();
-        
         this.isInitialized = false;
-        console.log('[GurbaniRadio] Application destroyed');
     }
 }
 
@@ -2882,16 +2181,15 @@ class GurbaniRadioApp {
 // INITIALIZATION
 // ═══════════════════════════════════════════════════════════════════════════════
 
-// Create global app instance
 let gurbaniRadio = null;
 
-// Initialize on DOM ready
 document.addEventListener('DOMContentLoaded', async () => {
+    console.log('[Init] DOM Ready - Starting app...');
+    
     try {
         gurbaniRadio = new GurbaniRadioApp();
         await gurbaniRadio.init();
 
-        // Expose to global scope for debugging
         window.gurbaniRadio = gurbaniRadio;
         window.AUDIO_CONFIG = AUDIO_CONFIG;
 
@@ -2900,16 +2198,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
-// Handle before unload
 window.addEventListener('beforeunload', () => {
     if (gurbaniRadio) {
-        // Save current state
         Utils.storage.set('lastVolume', gurbaniRadio.audioEngine?.volume);
         Utils.storage.set('lastTrackIndex', gurbaniRadio.audioEngine?.currentTrackIndex);
     }
 });
 
-// Service Worker Registration
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', async () => {
         try {
@@ -2921,22 +2216,9 @@ if ('serviceWorker' in navigator) {
     });
 }
 
-// Export for modules
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        GurbaniRadioApp,
-        AudioEngine,
-        VisualizerEngine,
-        ParticleSystem,
-        UIController,
-        Utils,
-        AUDIO_CONFIG
-    };
-}
-
 /**
  * ╔═══════════════════════════════════════════════════════════════════════════════╗
- * ║                        ੴ END OF GURBANI RADIO v6.0 ੴ                        ║
+ * ║                        ੴ GURBANI RADIO v6.2 FIXED ੴ                          ║
  * ║                     Waheguru Ji Ka Khalsa, Waheguru Ji Ki Fateh              ║
  * ╚═══════════════════════════════════════════════════════════════════════════════╝
  */

@@ -1,0 +1,1433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Daily Hukamnama from Sri Darbar Sahib, Amritsar">
+  <title>Daily Hukamnama | ਰੋਜ਼ਾਨਾ ਹੁਕਮਨਾਮਾ ਸਾਹਿਬ</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Gurmukhi:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    /* ═══════════════════════════════════════════════════════════════
+       CSS VARIABLES & THEME
+    ═══════════════════════════════════════════════════════════════ */
+    :root {
+      --bg-primary: #0d0a06;
+      --bg-secondary: #1a1408;
+      --bg-tertiary: #261e0c;
+      --bg-card: rgba(245, 158, 11, 0.03);
+      --bg-card-hover: rgba(245, 158, 11, 0.08);
+      --bg-glass: rgba(26, 20, 8, 0.95);
+      
+      --text-primary: #fff8e7;
+      --text-secondary: rgba(255, 248, 231, 0.9);
+      --text-tertiary: rgba(255, 248, 231, 0.7);
+      --text-muted: rgba(255, 248, 231, 0.5);
+      
+      --accent-primary: #f59e0b;
+      --accent-secondary: rgba(245, 158, 11, 0.15);
+      --accent-tertiary: rgba(245, 158, 11, 0.08);
+      --accent-border: rgba(245, 158, 11, 0.3);
+      --accent-glow: rgba(245, 158, 11, 0.4);
+      
+      --gradient-primary: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%);
+      --gradient-bg: radial-gradient(ellipse at top, #1a1408 0%, #0d0a06 50%, #000000 100%);
+      --gradient-header: linear-gradient(180deg, rgba(13,10,6,0.98) 0%, rgba(13,10,6,0.95) 100%);
+      
+      --border-light: rgba(245, 158, 11, 0.1);
+      --border-medium: rgba(245, 158, 11, 0.2);
+      
+      --shadow-glow: 0 0 40px rgba(245, 158, 11, 0.3);
+      --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.4);
+      
+      --success-color: #22c55e;
+      --error-color: #ef4444;
+      --warning-color: #f59e0b;
+      --info-color: #3b82f6;
+      
+      --font-gurmukhi: 28px;
+      --font-transliteration: 18px;
+      --font-translation: 16px;
+      
+      --verse-gap: 2rem;
+      --line-height-gurmukhi: 2.2;
+      
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      --radius-full: 9999px;
+      
+      --transition-fast: 0.15s ease;
+      --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--gradient-bg);
+      background-attachment: fixed;
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg-primary); }
+    ::-webkit-scrollbar-thumb { background: var(--accent-secondary); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent-primary); }
+
+    ::selection {
+      background: var(--accent-primary);
+      color: var(--bg-primary);
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(245, 158, 11, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse 60% 40% at 50% 120%, rgba(245, 158, 11, 0.1) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    /* Header */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--gradient-header);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--accent-border);
+      padding: 1rem 1.5rem;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--gradient-primary);
+    }
+
+    .header__inner {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .back-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.625rem 1rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-medium);
+      border-radius: var(--radius-lg);
+      color: var(--accent-primary);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all var(--transition-normal);
+    }
+
+    .back-btn:hover {
+      background: var(--accent-secondary);
+      transform: translateX(-4px);
+    }
+
+    .header__title {
+      flex: 1;
+      text-align: center;
+    }
+
+    .header__gurmukhi {
+      display: block;
+      font-family: 'Noto Sans Gurmukhi', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header__english {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-top: 0.25rem;
+    }
+
+    .header__actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .action-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-medium);
+      border-radius: var(--radius-md);
+      color: var(--accent-primary);
+      cursor: pointer;
+      transition: all var(--transition-normal);
+    }
+
+    .action-btn:hover {
+      background: var(--accent-secondary);
+      transform: scale(1.1);
+    }
+
+    /* Status Bar */
+    .status-bar {
+      display: none;
+      padding: 0.75rem 1rem;
+      text-align: center;
+      font-size: 0.85rem;
+    }
+
+    .status-bar.visible { display: block; }
+    .status-bar.info { background: rgba(59, 130, 246, 0.15); border-bottom: 1px solid rgba(59, 130, 246, 0.3); color: #93c5fd; }
+    .status-bar.warning { background: rgba(245, 158, 11, 0.15); border-bottom: 1px solid rgba(245, 158, 11, 0.3); color: #fcd34d; }
+    .status-bar.success { background: rgba(34, 197, 94, 0.15); border-bottom: 1px solid rgba(34, 197, 94, 0.3); color: #86efac; }
+    .status-bar.error { background: rgba(239, 68, 68, 0.15); border-bottom: 1px solid rgba(239, 68, 68, 0.3); color: #fca5a5; }
+    .status-bar i { margin-right: 0.5rem; }
+
+    /* Info Bar */
+    .info-bar {
+      background: var(--bg-glass);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border-light);
+      padding: 1rem 1.5rem;
+    }
+
+    .info-bar__inner {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    .date-picker-container {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .date-input {
+      padding: 0.625rem 1rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-medium);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all var(--transition-normal);
+    }
+
+    .date-input:hover, .date-input:focus {
+      border-color: var(--accent-primary);
+      outline: none;
+    }
+
+    .date-input::-webkit-calendar-picker-indicator {
+      filter: invert(1);
+      cursor: pointer;
+    }
+
+    .today-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.625rem 1.25rem;
+      background: var(--gradient-primary);
+      border: none;
+      border-radius: var(--radius-md);
+      color: var(--bg-primary);
+      font-weight: 600;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all var(--transition-normal);
+    }
+
+    .today-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-glow);
+    }
+
+    .gurdwara-info {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--accent-tertiary);
+      border-radius: var(--radius-full);
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    .gurdwara-info i { color: var(--accent-primary); }
+
+    /* Controls */
+    .controls {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      padding: 1rem;
+      background: rgba(0, 0, 0, 0.3);
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .toggle-btn {
+      padding: 0.5rem 1rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-medium);
+      border-radius: var(--radius-full);
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition-normal);
+    }
+
+    .toggle-btn[data-active="true"] {
+      background: var(--accent-secondary);
+      border-color: var(--accent-primary);
+      color: var(--accent-primary);
+    }
+
+    .toggle-btn:hover { transform: translateY(-2px); }
+
+    /* Main */
+    .main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+      min-height: 60vh;
+    }
+
+    /* Loading */
+    .loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem 2rem;
+      gap: 1.5rem;
+    }
+
+    .loading__khanda {
+      font-size: 4rem;
+      color: var(--accent-primary);
+      animation: pulse 2s ease-in-out infinite;
+      text-shadow: 0 0 30px var(--accent-glow);
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.7; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.1); }
+    }
+
+    .loading__text {
+      color: var(--text-secondary);
+      font-size: 1.125rem;
+    }
+
+    .loading__subtext {
+      font-family: 'Noto Sans Gurmukhi', sans-serif;
+      color: var(--text-muted);
+    }
+
+    .loading__progress {
+      width: 200px;
+      height: 4px;
+      background: var(--bg-tertiary);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .loading__progress-bar {
+      height: 100%;
+      background: var(--gradient-primary);
+      border-radius: 2px;
+      animation: progress 2s ease-in-out infinite;
+    }
+
+    @keyframes progress {
+      0% { width: 0%; margin-left: 0; }
+      50% { width: 70%; }
+      100% { width: 0%; margin-left: 100%; }
+    }
+
+    .loading__attempt {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      padding: 0.5rem 1rem;
+      background: var(--bg-card);
+      border-radius: var(--radius-full);
+    }
+
+    /* Error */
+    .error {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      padding: 3rem 2rem;
+      gap: 1.25rem;
+      text-align: center;
+      background: var(--bg-card);
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .error__icon { font-size: 3.5rem; color: var(--error-color); }
+    .error__title { font-size: 1.375rem; color: var(--error-color); font-weight: 700; }
+    .error__message { color: var(--text-muted); max-width: 500px; line-height: 1.7; }
+
+    .error__suggestions {
+      text-align: left;
+      background: var(--bg-tertiary);
+      padding: 1.25rem;
+      border-radius: var(--radius-md);
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .error__suggestions h4 {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .error__suggestions h4 i { color: var(--accent-primary); }
+    .error__suggestions ul { list-style: none; color: var(--text-tertiary); font-size: 0.85rem; }
+    .error__suggestions li { padding: 0.375rem 0; padding-left: 1.25rem; position: relative; }
+    .error__suggestions li::before { content: '→'; position: absolute; left: 0; color: var(--accent-primary); }
+
+    .error__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: center;
+      margin-top: 0.5rem;
+    }
+
+    .retry-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.875rem 2rem;
+      background: var(--gradient-primary);
+      border: none;
+      border-radius: var(--radius-lg);
+      color: var(--bg-primary);
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all var(--transition-normal);
+    }
+
+    .retry-btn:hover {
+      transform: scale(1.05);
+      box-shadow: var(--shadow-glow);
+    }
+
+    .alt-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.875rem 1.5rem;
+      background: transparent;
+      border: 1px solid var(--border-medium);
+      border-radius: var(--radius-lg);
+      color: var(--text-secondary);
+      font-weight: 500;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all var(--transition-normal);
+    }
+
+    .alt-btn:hover {
+      background: var(--accent-secondary);
+      border-color: var(--accent-primary);
+    }
+
+    /* Hukamnama Container */
+    .hukamnama-container { display: none; }
+    .hukamnama-container.visible { display: block; animation: fadeIn 0.6s ease; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hukamnama-header {
+      background: linear-gradient(145deg, var(--bg-card), var(--bg-tertiary));
+      border: 1px solid var(--accent-border);
+      border-radius: var(--radius-xl);
+      padding: 2rem;
+      margin-bottom: 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hukamnama-header::before {
+      content: '☬';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 15rem;
+      color: var(--accent-primary);
+      opacity: 0.03;
+      pointer-events: none;
+    }
+
+    .hukamnama-header__khanda {
+      font-size: 3rem;
+      color: var(--accent-primary);
+      margin-bottom: 1rem;
+      text-shadow: 0 0 30px var(--accent-glow);
+    }
+
+    .hukamnama-header__date {
+      font-family: 'Noto Sans Gurmukhi', sans-serif;
+      font-size: 1.5rem;
+      color: var(--accent-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .hukamnama-header__date-english {
+      font-size: 1rem;
+      color: var(--text-tertiary);
+      margin-bottom: 1rem;
+    }
+
+    .hukamnama-header__source {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      padding: 0.25rem 0.75rem;
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-full);
+      margin-bottom: 1rem;
+    }
+
+    .hukamnama-header__ang {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1.5rem;
+      background: var(--accent-secondary);
+      border-radius: var(--radius-full);
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .hukamnama-header__ang strong { color: var(--accent-primary); }
+
+    .hukamnama-meta {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .meta-tag {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      color: var(--text-tertiary);
+    }
+
+    .meta-tag i { color: var(--accent-primary); }
+    .meta-tag strong { color: var(--text-secondary); }
+
+    /* Verses */
+    .verses-container {
+      display: flex;
+      flex-direction: column;
+      gap: var(--verse-gap);
+    }
+
+    .verse {
+      background: linear-gradient(145deg, var(--bg-card), transparent);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-xl);
+      padding: 2rem;
+      position: relative;
+      transition: all var(--transition-normal);
+    }
+
+    .verse::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: var(--gradient-primary);
+      border-radius: 4px 0 0 4px;
+      opacity: 0.5;
+    }
+
+    .verse:hover {
+      border-color: var(--accent-border);
+      transform: translateX(8px);
+      box-shadow: var(--shadow-card);
+    }
+
+    .verse:hover::before { opacity: 1; }
+
+    .verse__gurmukhi {
+      font-family: 'Noto Sans Gurmukhi', sans-serif;
+      font-size: var(--font-gurmukhi);
+      font-weight: 600;
+      color: var(--accent-primary);
+      line-height: var(--line-height-gurmukhi);
+      text-align: center;
+      margin-bottom: 1.25rem;
+      text-shadow: 0 0 30px var(--accent-glow);
+    }
+
+    .verse__transliteration {
+      font-size: var(--font-transliteration);
+      color: var(--text-secondary);
+      font-style: italic;
+      text-align: center;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .verse__translation {
+      font-size: var(--font-translation);
+      color: var(--text-tertiary);
+      text-align: center;
+      line-height: 1.8;
+      margin-bottom: 0.75rem;
+    }
+
+    .verse__punjabi {
+      font-family: 'Noto Sans Gurmukhi', sans-serif;
+      font-size: 1rem;
+      color: var(--text-muted);
+      text-align: center;
+      padding: 1rem;
+      background: var(--accent-tertiary);
+      border-radius: var(--radius-md);
+      margin-top: 1rem;
+      border-left: 3px solid var(--accent-border);
+    }
+
+    .hidden { display: none !important; }
+
+    /* Share */
+    .share-section {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-light);
+    }
+
+    .share-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 50px;
+      height: 50px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-medium);
+      border-radius: 50%;
+      color: var(--text-secondary);
+      font-size: 1.25rem;
+      cursor: pointer;
+      transition: all var(--transition-normal);
+    }
+
+    .share-btn:hover { transform: translateY(-4px) scale(1.1); }
+    .share-btn.whatsapp:hover { background: #25D366; border-color: #25D366; color: white; }
+    .share-btn.twitter:hover { background: #1DA1F2; border-color: #1DA1F2; color: white; }
+    .share-btn.facebook:hover { background: #4267B2; border-color: #4267B2; color: white; }
+    .share-btn.copy:hover { background: var(--accent-primary); border-color: var(--accent-primary); color: var(--bg-primary); }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 3rem 1.5rem;
+      border-top: 1px solid var(--border-light);
+      margin-top: 2rem;
+    }
+
+    .footer__khanda { font-size: 2.5rem; color: var(--accent-primary); margin-bottom: 1rem; }
+    .footer__text { color: var(--text-muted); font-size: 0.875rem; line-height: 1.8; }
+    .footer__gurmukhi { font-family: 'Noto Sans Gurmukhi', sans-serif; color: var(--text-tertiary); font-size: 1rem; margin-top: 0.75rem; }
+
+    /* Scroll Top */
+    .scroll-top {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 56px;
+      height: 56px;
+      background: var(--gradient-primary);
+      border: none;
+      border-radius: 50%;
+      color: var(--bg-primary);
+      font-size: 1.25rem;
+      cursor: pointer;
+      opacity: 0;
+      visibility: hidden;
+      transition: all var(--transition-normal);
+      box-shadow: var(--shadow-glow);
+      z-index: 50;
+    }
+
+    .scroll-top.visible { opacity: 1; visibility: visible; }
+    .scroll-top:hover { transform: translateY(-5px) scale(1.1); }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      padding: 1rem 2rem;
+      background: var(--success-color);
+      color: white;
+      border-radius: var(--radius-lg);
+      font-weight: 500;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      opacity: 0;
+      visibility: hidden;
+      transition: all var(--transition-normal);
+      z-index: 1000;
+    }
+
+    .toast.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Debug Panel */
+    .debug-panel {
+      position: fixed;
+      bottom: 1rem;
+      left: 1rem;
+      background: rgba(0,0,0,0.9);
+      border: 1px solid var(--accent-primary);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      font-size: 0.7rem;
+      color: #0f0;
+      font-family: monospace;
+      max-width: 350px;
+      max-height: 200px;
+      overflow: auto;
+      z-index: 9999;
+      display: none;
+    }
+
+    .debug-panel.visible { display: block; }
+    .debug-panel pre { margin: 0; white-space: pre-wrap; word-break: break-all; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .header__inner { flex-wrap: wrap; justify-content: center; }
+      .back-btn { order: -1; width: 100%; justify-content: center; margin-bottom: 0.5rem; }
+      .header__gurmukhi { font-size: 1.5rem; }
+      .info-bar__inner { flex-direction: column; }
+      .verse { padding: 1.5rem; }
+      .verse__gurmukhi { font-size: calc(var(--font-gurmukhi) * 0.8); }
+      .hukamnama-header { padding: 1.5rem; }
+      .scroll-top { bottom: 1.5rem; right: 1.5rem; width: 50px; height: 50px; }
+    }
+
+    @media (max-width: 480px) {
+      .controls { gap: 0.375rem; padding: 0.75rem; }
+      .toggle-btn { padding: 0.375rem 0.75rem; font-size: 0.75rem; }
+      .hukamnama-meta { flex-direction: column; align-items: center; }
+      .error__actions { flex-direction: column; width: 100%; }
+      .retry-btn, .alt-btn { width: 100%; justify-content: center; }
+    }
+
+    @media print {
+      .header, .info-bar, .controls, .share-section, .scroll-top, .footer, .status-bar, .debug-panel { display: none !important; }
+      body { background: white !important; color: black !important; }
+      .verse { border: 1px solid #ccc; page-break-inside: avoid; }
+      .verse__gurmukhi { color: black !important; text-shadow: none !important; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header__inner">
+      <a href="index.html" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+        <span>Back</span>
+      </a>
+      
+      <div class="header__title">
+        <span class="header__gurmukhi">ਰੋਜ਼ਾਨਾ ਹੁਕਮਨਾਮਾ ਸਾਹਿਬ</span>
+        <span class="header__english">Daily Hukamnama from Sri Darbar Sahib</span>
+      </div>
+      
+      <div class="header__actions">
+        <button class="action-btn" id="debugBtn" title="Toggle Debug">
+          <i class="fas fa-bug"></i>
+        </button>
+        <button class="action-btn" id="refreshBtn" title="Refresh">
+          <i class="fas fa-sync-alt"></i>
+        </button>
+        <button class="action-btn" id="printBtn" title="Print">
+          <i class="fas fa-print"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Status Bar -->
+  <div class="status-bar" id="statusBar">
+    <i class="fas fa-info-circle"></i>
+    <span id="statusText">Loading...</span>
+  </div>
+
+  <!-- Info Bar -->
+  <div class="info-bar">
+    <div class="info-bar__inner">
+      <div class="date-picker-container">
+        <i class="fas fa-calendar-alt" style="color: var(--accent-primary);"></i>
+        <input type="date" id="dateInput" class="date-input">
+        <button class="today-btn" id="todayBtn">
+          <i class="fas fa-sun"></i>
+          Today
+        </button>
+      </div>
+      
+      <div class="gurdwara-info">
+        <i class="fas fa-place-of-worship"></i>
+        <span>ਸ੍ਰੀ ਦਰਬਾਰ ਸਾਹਿਬ, ਅੰਮ੍ਰਿਤਸਰ</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls">
+    <button class="toggle-btn" id="toggleGurmukhi" data-active="true">ਗੁਰਮੁਖੀ</button>
+    <button class="toggle-btn" id="toggleTransliteration" data-active="true">Roman</button>
+    <button class="toggle-btn" id="toggleTranslation" data-active="true">English</button>
+    <button class="toggle-btn" id="togglePunjabi" data-active="false">ਪੰਜਾਬੀ ਅਰਥ</button>
+  </div>
+
+  <!-- Main -->
+  <main class="main">
+    <!-- Loading -->
+    <div class="loading" id="loading">
+      <div class="loading__khanda">☬</div>
+      <p class="loading__text" id="loadingText">Fetching Hukamnama...</p>
+      <p class="loading__subtext">ਹੁਕਮਨਾਮਾ ਸਾਹਿਬ ਲੋਡ ਹੋ ਰਿਹਾ ਹੈ...</p>
+      <div class="loading__progress">
+        <div class="loading__progress-bar"></div>
+      </div>
+      <div class="loading__attempt" id="loadingAttempt"></div>
+    </div>
+
+    <!-- Error -->
+    <div class="error" id="error">
+      <div class="error__icon"><i class="fas fa-exclamation-circle"></i></div>
+      <h2 class="error__title">Unable to Load Hukamnama</h2>
+      <p class="error__message" id="errorMessage">Please try again.</p>
+      
+      <div class="error__suggestions">
+        <h4><i class="fas fa-lightbulb"></i> Suggestions</h4>
+        <ul>
+          <li>Try loading yesterday's Hukamnama</li>
+          <li>Select a specific date</li>
+          <li>Check your internet connection</li>
+        </ul>
+      </div>
+
+      <div class="error__actions">
+        <button class="retry-btn" id="retryBtn">
+          <i class="fas fa-redo"></i> Try Again
+        </button>
+        <button class="alt-btn" id="loadYesterdayBtn">
+          <i class="fas fa-calendar-minus"></i> Yesterday
+        </button>
+      </div>
+    </div>
+
+    <!-- Hukamnama Content -->
+    <div class="hukamnama-container" id="hukamnamaContainer">
+      <div class="hukamnama-header">
+        <div class="hukamnama-header__khanda">☬</div>
+        <div class="hukamnama-header__date" id="hukamDate">ਅੱਜ ਦਾ ਹੁਕਮਨਾਮਾ</div>
+        <div class="hukamnama-header__date-english" id="hukamDateEnglish"></div>
+        <div class="hukamnama-header__source" id="dataSource">
+          <i class="fas fa-server"></i>
+          <span>Live from BaniDB</span>
+        </div>
+        <div class="hukamnama-header__ang">
+          <i class="fas fa-book-open"></i>
+          <span>ਅੰਗ:</span>
+          <strong id="angNumber">-</strong>
+        </div>
+        
+        <div class="hukamnama-meta">
+          <div class="meta-tag">
+            <i class="fas fa-music"></i>
+            <span>ਰਾਗ:</span>
+            <strong id="raagName">-</strong>
+          </div>
+          <div class="meta-tag">
+            <i class="fas fa-feather-alt"></i>
+            <span>ਲਿਖਾਰੀ:</span>
+            <strong id="writerName">-</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="verses-container" id="versesContainer"></div>
+
+      <div class="share-section">
+        <button class="share-btn whatsapp" id="shareWhatsapp" title="WhatsApp">
+          <i class="fab fa-whatsapp"></i>
+        </button>
+        <button class="share-btn twitter" id="shareTwitter" title="Twitter">
+          <i class="fab fa-twitter"></i>
+        </button>
+        <button class="share-btn facebook" id="shareFacebook" title="Facebook">
+          <i class="fab fa-facebook-f"></i>
+        </button>
+        <button class="share-btn copy" id="copyLink" title="Copy Link">
+          <i class="fas fa-link"></i>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer__khanda">☬</div>
+    <p class="footer__text">
+      Hukamnama from Sri Darbar Sahib, Amritsar<br>
+      Data provided by BaniDB API
+    </p>
+    <p class="footer__gurmukhi">
+      ਵਾਹਿਗੁਰੂ ਜੀ ਕਾ ਖਾਲਸਾ ॥ ਵਾਹਿਗੁਰੂ ਜੀ ਕੀ ਫਤਹਿ ॥
+    </p>
+  </footer>
+
+  <button class="scroll-top" id="scrollTop"><i class="fas fa-arrow-up"></i></button>
+  <div class="toast" id="toast">Link copied!</div>
+  
+  <!-- Debug Panel -->
+  <div class="debug-panel" id="debugPanel">
+    <pre id="debugContent">Debug info will appear here...</pre>
+  </div>
+
+  <script>
+    // ═══════════════════════════════════════════════════════════════
+    // HUKAMNAMA API - COMPLETE WORKING VERSION
+    // ═══════════════════════════════════════════════════════════════
+
+    const API_BASE = 'https://api.banidb.com/v2';
+    
+    // DOM Elements
+    const $ = id => document.getElementById(id);
+    const loading = $('loading');
+    const loadingText = $('loadingText');
+    const loadingAttempt = $('loadingAttempt');
+    const error = $('error');
+    const errorMessage = $('errorMessage');
+    const statusBar = $('statusBar');
+    const statusText = $('statusText');
+    const hukamnamaContainer = $('hukamnamaContainer');
+    const versesContainer = $('versesContainer');
+    const dateInput = $('dateInput');
+    const debugPanel = $('debugPanel');
+    const debugContent = $('debugContent');
+
+    // State
+    let showGurmukhi = true;
+    let showTransliteration = true;
+    let showTranslation = true;
+    let showPunjabi = false;
+    let isLoading = false;
+    let debugMode = false;
+
+    // ═══════════════════════════════════════════════════════════════
+    // UTILITIES
+    // ═══════════════════════════════════════════════════════════════
+
+    function escapeHtml(text) {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function formatDate(date) {
+      const d = new Date(date);
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
+    function formatDisplayDate(dateStr) {
+      const date = new Date(dateStr + 'T12:00:00');
+      return date.toLocaleDateString('en-US', { 
+        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
+      });
+    }
+
+    function formatPunjabiDate(dateStr) {
+      const date = new Date(dateStr + 'T12:00:00');
+      const months = ['ਜਨਵਰੀ','ਫਰਵਰੀ','ਮਾਰਚ','ਅਪ੍ਰੈਲ','ਮਈ','ਜੂਨ',
+                      'ਜੁਲਾਈ','ਅਗਸਤ','ਸਤੰਬਰ','ਅਕਤੂਬਰ','ਨਵੰਬਰ','ਦਸੰਬਰ'];
+      return `${date.getDate()} ${months[date.getMonth()]}, ${date.getFullYear()}`;
+    }
+
+    function showStatus(msg, type = 'info') {
+      statusBar.className = `status-bar visible ${type}`;
+      statusText.textContent = msg;
+    }
+
+    function hideStatus() { statusBar.classList.remove('visible'); }
+
+    function showToast(msg) {
+      const toast = $('toast');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    function debug(label, data) {
+      console.log(`🔍 ${label}:`, data);
+      if (debugMode) {
+        const text = typeof data === 'object' ? JSON.stringify(data, null, 2) : data;
+        debugContent.textContent = `${label}:\n${text}`;
+      }
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // API FETCH
+    // ═══════════════════════════════════════════════════════════════
+
+    async function fetchHukamnama(targetDate = null) {
+      if (isLoading) return;
+      isLoading = true;
+
+      // Reset UI
+      loading.style.display = 'flex';
+      error.style.display = 'none';
+      hukamnamaContainer.classList.remove('visible');
+      hideStatus();
+
+      const today = formatDate(new Date());
+      const dateToFetch = targetDate || today;
+      dateInput.value = dateToFetch;
+
+      debug('Fetching date', dateToFetch);
+
+      try {
+        // Build URL
+        let url;
+        if (dateToFetch === today) {
+          url = `${API_BASE}/hukamnamas/today`;
+        } else {
+          const [year, month, day] = dateToFetch.split('-');
+          url = `${API_BASE}/hukamnamas/${year}/${month}/${day}`;
+        }
+
+        loadingText.textContent = 'Connecting to BaniDB...';
+        loadingAttempt.textContent = url;
+        debug('URL', url);
+
+        // Fetch with timeout
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 15000);
+
+        const response = await fetch(url, { signal: controller.signal });
+        clearTimeout(timeout);
+
+        debug('Response status', response.status);
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        debug('Raw API data keys', Object.keys(data));
+
+        // ─────────────────────────────────────────────────────────
+        // PARSE RESPONSE - Handle BaniDB structure
+        // ─────────────────────────────────────────────────────────
+        let verses = [];
+
+        // Check various possible structures
+        if (data.hukamnama && Array.isArray(data.hukamnama)) {
+          verses = data.hukamnama;
+          debug('Found verses in data.hukamnama', verses.length);
+        } else if (data.verses && Array.isArray(data.verses)) {
+          verses = data.verses;
+          debug('Found verses in data.verses', verses.length);
+        } else if (Array.isArray(data)) {
+          verses = data;
+          debug('Found verses as direct array', verses.length);
+        }
+
+        // Log first verse structure for debugging
+        if (verses.length > 0) {
+          debug('First verse structure', verses[0]);
+        }
+
+        if (verses.length === 0) {
+          throw new Error('No verses found in API response. The Hukamnama may not be published yet for this date.');
+        }
+
+        // Success!
+        loading.style.display = 'none';
+        showStatus(`✓ Loaded ${verses.length} verses for ${formatDisplayDate(dateToFetch)}`, 'success');
+        setTimeout(hideStatus, 4000);
+
+        // Render
+        renderHukamnama(verses, dateToFetch, data);
+        hukamnamaContainer.classList.add('visible');
+
+      } catch (err) {
+        console.error('Fetch error:', err);
+        debug('Error', err.message);
+        
+        loading.style.display = 'none';
+        error.style.display = 'flex';
+        errorMessage.textContent = err.message || 'Failed to load Hukamnama. Please try again.';
+        showStatus('Failed to load Hukamnama', 'error');
+      }
+
+      isLoading = false;
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // RENDER HUKAMNAMA
+    // ═══════════════════════════════════════════════════════════════
+
+    function renderHukamnama(verses, dateStr, fullData = {}) {
+      debug('Rendering verses', verses.length);
+
+      // Update header
+      $('hukamDate').textContent = formatPunjabiDate(dateStr);
+      $('hukamDateEnglish').textContent = formatDisplayDate(dateStr);
+
+      // Extract metadata from first verse
+      if (verses.length > 0) {
+        const v = verses[0];
+        
+        // Ang
+        const ang = v.pageNo || v.pageno || v.ang || v.pageNumber || 
+                    fullData.hukamnamainfo?.pageno || '-';
+        $('angNumber').textContent = ang;
+
+        // Raag - deep search
+        let raag = '';
+        if (v.raag) {
+          raag = typeof v.raag === 'string' ? v.raag : 
+                 (v.raag.unicode || v.raag.gurmukhi || v.raag.english || '');
+        }
+        if (!raag && v.shabadInfo?.raag) {
+          const r = v.shabadInfo.raag;
+          raag = r.unicode || r.gurmukhi || r.english || '';
+        }
+        $('raagName').textContent = raag || 'ਸ੍ਰੀ ਰਾਗ';
+
+        // Writer - deep search
+        let writer = '';
+        if (v.writer) {
+          writer = typeof v.writer === 'string' ? v.writer :
+                   (v.writer.unicode || v.writer.gurmukhi || v.writer.english || '');
+        }
+        if (!writer && v.shabadInfo?.writer) {
+          const w = v.shabadInfo.writer;
+          writer = w.unicode || w.gurmukhi || w.english || '';
+        }
+        $('writerName').textContent = writer || 'ਮਹਲਾ';
+      }
+
+      // Render each verse
+      versesContainer.innerHTML = '';
+      
+      verses.forEach((v, i) => {
+        // ─────────────────────────────────────────────────────────
+        // GURMUKHI - Try multiple paths
+        // ─────────────────────────────────────────────────────────
+        let gurmukhi = '';
+        if (v.verse) {
+          if (typeof v.verse === 'string') {
+            gurmukhi = v.verse;
+          } else if (v.verse.unicode) {
+            gurmukhi = v.verse.unicode;
+          } else if (v.verse.gurmukhi) {
+            gurmukhi = v.verse.gurmukhi;
+          }
+        }
+        // Fallback checks
+        if (!gurmukhi) gurmukhi = v.unicode || v.gurmukhi || '';
+
+        // ─────────────────────────────────────────────────────────
+        // TRANSLITERATION
+        // ─────────────────────────────────────────────────────────
+        let translit = '';
+        if (v.transliteration) {
+          if (typeof v.transliteration === 'string') {
+            translit = v.transliteration;
+          } else {
+            translit = v.transliteration.english || v.transliteration.en || 
+                       v.transliteration.roman || '';
+          }
+        }
+
+        // ─────────────────────────────────────────────────────────
+        // ENGLISH TRANSLATION
+        // ─────────────────────────────────────────────────────────
+        let english = '';
+        if (v.translation) {
+          if (typeof v.translation === 'string') {
+            english = v.translation;
+          } else if (v.translation.en) {
+            const en = v.translation.en;
+            if (typeof en === 'string') {
+              english = en;
+            } else {
+              english = en.bdb || en.ms || en.ssk || en.ssa || 
+                        Object.values(en).find(x => typeof x === 'string') || '';
+            }
+          }
+        }
+
+        // ─────────────────────────────────────────────────────────
+        // PUNJABI TRANSLATION
+        // ─────────────────────────────────────────────────────────
+        let punjabi = '';
+        if (v.translation?.pu) {
+          const pu = v.translation.pu;
+          if (typeof pu === 'string') {
+            punjabi = pu;
+          } else {
+            // Try each source
+            for (const key of ['ss', 'bdb', 'ms', 'ft']) {
+              if (pu[key]) {
+                if (typeof pu[key] === 'string') {
+                  punjabi = pu[key];
+                  break;
+                } else if (pu[key].unicode || pu[key].gurmukhi) {
+                  punjabi = pu[key].unicode || pu[key].gurmukhi;
+                  break;
+                }
+              }
+            }
+          }
+        }
+
+        // Skip empty verses
+        if (!gurmukhi && !translit && !english) return;
+
+        // Create element
+        const el = document.createElement('div');
+        el.className = 'verse';
+        el.innerHTML = `
+          <div class="verse__gurmukhi ${showGurmukhi ? '' : 'hidden'}">${escapeHtml(gurmukhi)}</div>
+          <div class="verse__transliteration ${showTransliteration ? '' : 'hidden'}">${escapeHtml(translit)}</div>
+          <div class="verse__translation ${showTranslation ? '' : 'hidden'}">${escapeHtml(english)}</div>
+          <div class="verse__punjabi ${showPunjabi ? '' : 'hidden'}">${escapeHtml(punjabi)}</div>
+        `;
+        versesContainer.appendChild(el);
+      });
+
+      debug('Rendered verses', versesContainer.children.length);
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // TOGGLE VISIBILITY
+    // ═══════════════════════════════════════════════════════════════
+
+    function toggleVisibility(className, show) {
+      document.querySelectorAll(`.${className}`).forEach(el => {
+        el.classList.toggle('hidden', !show);
+      });
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // SETUP
+    // ═══════════════════════════════════════════════════════════════
+
+    function setup() {
+      // Date picker
+      const today = formatDate(new Date());
+      dateInput.max = today;
+      dateInput.min = '2002-01-01';
+      dateInput.value = today;
+
+      dateInput.addEventListener('change', () => {
+        if (dateInput.value) fetchHukamnama(dateInput.value);
+      });
+
+      // Today button
+      $('todayBtn').addEventListener('click', () => {
+        dateInput.value = formatDate(new Date());
+        fetchHukamnama();
+      });
+
+      // Refresh
+      $('refreshBtn').addEventListener('click', () => {
+        const icon = $('refreshBtn').querySelector('i');
+        icon.classList.add('fa-spin');
+        fetchHukamnama(dateInput.value).finally(() => {
+          setTimeout(() => icon.classList.remove('fa-spin'), 500);
+        });
+      });
+
+      // Retry
+      $('retryBtn').addEventListener('click', () => fetchHukamnama(dateInput.value));
+
+      // Yesterday
+      $('loadYesterdayBtn').addEventListener('click', () => {
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const dateStr = formatDate(yesterday);
+        dateInput.value = dateStr;
+        fetchHukamnama(dateStr);
+      });
+
+      // Print
+      $('printBtn').addEventListener('click', () => window.print());
+
+      // Debug toggle
+      $('debugBtn').addEventListener('click', () => {
+        debugMode = !debugMode;
+        debugPanel.classList.toggle('visible', debugMode);
+        showToast(debugMode ? 'Debug ON' : 'Debug OFF');
+      });
+
+      // Toggles
+      $('toggleGurmukhi').addEventListener('click', function() {
+        showGurmukhi = !showGurmukhi;
+        this.dataset.active = showGurmukhi;
+        toggleVisibility('verse__gurmukhi', showGurmukhi);
+      });
+
+      $('toggleTransliteration').addEventListener('click', function() {
+        showTransliteration = !showTransliteration;
+        this.dataset.active = showTransliteration;
+        toggleVisibility('verse__transliteration', showTransliteration);
+      });
+
+      $('toggleTranslation').addEventListener('click', function() {
+        showTranslation = !showTranslation;
+        this.dataset.active = showTranslation;
+        toggleVisibility('verse__translation', showTranslation);
+      });
+
+      $('togglePunjabi').addEventListener('click', function() {
+        showPunjabi = !showPunjabi;
+        this.dataset.active = showPunjabi;
+        toggleVisibility('verse__punjabi', showPunjabi);
+      });
+
+      // Scroll to top
+      window.addEventListener('scroll', () => {
+        $('scrollTop').classList.toggle('visible', window.scrollY > 500);
+      });
+      $('scrollTop').addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      // Share buttons
+      $('shareWhatsapp').addEventListener('click', () => {
+        const text = encodeURIComponent(`Daily Hukamnama - ${$('hukamDateEnglish').textContent}\n${window.location.href}`);
+        window.open(`https://wa.me/?text=${text}`, '_blank');
+      });
+
+      $('shareTwitter').addEventListener('click', () => {
+        const text = encodeURIComponent(`Daily Hukamnama - ${$('hukamDateEnglish').textContent}`);
+        window.open(`https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(window.location.href)}`, '_blank');
+      });
+
+      $('shareFacebook').addEventListener('click', () => {
+        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank');
+      });
+
+      $('copyLink').addEventListener('click', () => {
+        navigator.clipboard.writeText(window.location.href)
+          .then(() => showToast('✓ Link copied!'))
+          .catch(() => showToast('✗ Copy failed'));
+      });
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // INIT
+    // ═══════════════════════════════════════════════════════════════
+
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('🙏 Daily Hukamnama - Initializing...');
+      setup();
+      fetchHukamnama();
+    });
+  </script>
+</body>
+</html>

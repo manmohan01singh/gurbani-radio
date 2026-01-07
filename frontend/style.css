@@ -951,9 +951,9 @@ ol {
   position: absolute;
   inset: 0;
   background: var(--glass-2);
-  backdrop-filter: blur(20px);
+  backdrop-filter: blur(50px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--border-light);
+  border: 0.5px solid var(--border-light);
   border-radius: inherit;
   box-shadow: var(--shadow-md), inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
@@ -981,20 +981,20 @@ ol {
   gap: var(--space-xs);
   padding: var(--space-2xs) var(--space-sm);
   background: rgba(239, 68, 68, 0.12);
-  border: 1px solid rgba(239, 68, 68, 0.35);
+  border: 0.5px solid rgba(239, 68, 68, 0.35);
   border-radius: var(--radius-full);
 }
 
 .status-item__pulse-rings {
   position: absolute;
-  inset: -4px;
+  inset: -2px;
   pointer-events: none;
 }
 
 .status-item__pulse-rings span {
   position: absolute;
   inset: 0;
-  border: 1px solid var(--live-red);
+  border: 0.5px solid var(--live-red);
   border-radius: inherit;
   animation: pulse-ring 2s ease-out infinite;
   opacity: 0;
@@ -1015,8 +1015,8 @@ ol {
 }
 
 .status-item--live .status-item__dot {
-  width: 8px;
-  height: 8px;
+  width: 5px;
+  height: 5px;
   background: var(--live-red);
   border-radius: 50%;
   box-shadow: 0 0 10px var(--live-red);
@@ -2880,274 +2880,1388 @@ ol {
 /* ─────────────────────────────────────────────────────────────────────────
    NOTES MODAL
    ───────────────────────────────────────────────────────────────────────── */
-.notes-container {
+/* ═══════════════════════════════════════════════════════════════
+   NOTES MODAL - CLEAN CENTERED DESIGN
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Overlay - Full Screen Backdrop */
+/* ═══════════════════════════════════════════════════════════════════════════
+   NOTES MODAL - SACRED MANUSCRIPT STYLE (Matches Shabad Modal)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Overlay - Full Screen Backdrop */
+.notes-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  
+  /* Divine backdrop */
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 0, 0, 0.75) 0%,
+    rgba(0, 0, 0, 0.9) 100%
+  );
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  
+  /* Entrance animation */
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.notes-textarea {
+.notes-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Sacred ambient glow */
+.notes-overlay::before {
+  content: '';
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(
+    circle,
+    rgba(168, 85, 247, 0.08) 0%,
+    transparent 70%
+  );
+  border-radius: 50%;
+  pointer-events: none;
+  animation: divineBreath 8s ease-in-out infinite;
+}
+
+/* Modal Container - Sacred Manuscript */
+.notes-modal {
+  position: relative;
   width: 100%;
-  min-height: 200px;
-  padding: 1rem;
+  max-width: 600px;
+  max-height: 85vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  
+  /* Sacred manuscript background */
+  background: linear-gradient(165deg, 
+    rgba(30, 25, 35, 0.98) 0%, 
+    rgba(20, 18, 25, 0.99) 50%,
+    rgba(25, 22, 30, 0.98) 100%);
+  border-radius: 24px;
+  
+  /* Divine purple/gold border */
+  border: 1px solid rgba(168, 85, 247, 0.25);
+  box-shadow: 
+    0 0 0 1px rgba(168, 85, 247, 0.1),
+    0 25px 80px -20px rgba(0, 0, 0, 0.8),
+    0 0 100px -50px rgba(168, 85, 247, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  
+  /* Entrance animation */
+  transform: scale(0.9) translateY(30px);
+  opacity: 0;
+  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.notes-overlay.active .notes-modal {
+  transform: scale(1) translateY(0);
+  opacity: 1;
+}
+
+/* Top decorative border */
+.notes-modal::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(168, 85, 247, 0.5) 20%,
+    rgba(168, 85, 247, 0.8) 50%,
+    rgba(168, 85, 247, 0.5) 80%,
+    transparent 100%
+  );
+  border-radius: 0 0 4px 4px;
+}
+
+/* Sacred symbol at top */
+.notes-modal::after {
+  content: '📝';
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.8rem;
+  text-shadow: 0 0 30px rgba(168, 85, 247, 0.6);
+  animation: sacredGlow 3s ease-in-out infinite;
+}
+
+/* Header */
+.notes-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.75rem 2rem 1.25rem;
+  border-bottom: 1px solid rgba(168, 85, 247, 0.1);
+}
+
+.notes-header__title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.notes-header__icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #a855f7, #8b5cf6);
+  border-radius: 12px;
+  font-size: 1.2rem;
+  color: white;
+  animation: gentleFloat 4s ease-in-out infinite;
+}
+
+.notes-header h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-divine);
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+.notes-header h2 span {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--text-sacred);
+  margin-top: 2px;
+}
+
+/* Close Button */
+.notes-close {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
-  color: #fff;
-  font-family: var(--font-primary);
-  font-size: 0.95rem;
-  line-height: 1.6;
-  resize: vertical;
+  color: var(--text-sacred);
+  font-size: 1.25rem;
+  cursor: pointer;
   transition: all 0.3s ease;
+}
+
+.notes-close:hover {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+  transform: rotate(90deg);
+}
+
+/* Content Container */
+.notes-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.5rem 2rem;
+  overflow-y: auto;
+}
+
+/* Textarea - Sacred Parchment Feel */
+.notes-textarea {
+  width: 100%;
+  min-height: 200px;
+  max-height: 350px;
+  padding: 1.25rem;
+  background: linear-gradient(
+    180deg,
+    rgba(168, 85, 247, 0.05) 0%,
+    rgba(168, 85, 247, 0.02) 50%,
+    rgba(168, 85, 247, 0.05) 100%
+  );
+  border: 1px solid rgba(168, 85, 247, 0.15);
+  border-left: 4px solid #a855f7;
+  border-radius: 16px;
+  color: #fff;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.8;
+  resize: vertical;
+  box-shadow: 
+    inset 0 0 40px rgba(168, 85, 247, 0.03),
+    0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .notes-textarea:focus {
   outline: none;
-  border-color: rgba(247, 198, 52, 0.5);
-  background: rgba(255, 255, 255, 0.08);
-  box-shadow: 0 0 20px rgba(247, 198, 52, 0.1);
+  border-color: rgba(168, 85, 247, 0.4);
+  background: linear-gradient(
+    180deg,
+    rgba(168, 85, 247, 0.08) 0%,
+    rgba(168, 85, 247, 0.03) 50%,
+    rgba(168, 85, 247, 0.08) 100%
+  );
+  box-shadow: 
+    0 0 0 3px rgba(168, 85, 247, 0.1),
+    inset 0 0 40px rgba(168, 85, 247, 0.05);
 }
 
 .notes-textarea::placeholder {
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.3);
+  font-style: italic;
 }
 
+/* Custom Scrollbar */
+.notes-textarea::-webkit-scrollbar {
+  width: 6px;
+}
+
+.notes-textarea::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 3px;
+}
+
+.notes-textarea::-webkit-scrollbar-thumb {
+  background: rgba(168, 85, 247, 0.3);
+  border-radius: 3px;
+}
+
+.notes-textarea::-webkit-scrollbar-thumb:hover {
+  background: rgba(168, 85, 247, 0.5);
+}
+
+/* Character Count */
+.notes-char-count {
+  text-align: right;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.4);
+  margin-top: -0.5rem;
+}
+
+.notes-char-count.warning {
+  color: #f59e0b;
+}
+
+.notes-char-count.limit {
+  color: #ef4444;
+}
+
+/* Actions Container */
 .notes-actions {
   display: flex;
   gap: 0.75rem;
   flex-wrap: wrap;
+  justify-content: center;
+  padding: 1.5rem 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 0 0 24px 24px;
 }
 
+/* Buttons */
 .notes-btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
-  padding: 0.75rem 1.25rem;
+  padding: 0.875rem 1.5rem;
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
   font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.notes-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Save Button - Primary Purple */
+.notes-btn--save {
+  background: linear-gradient(135deg, #a855f7, #8b5cf6);
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(168, 85, 247, 0.3);
+}
+
+.notes-btn--save:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(168, 85, 247, 0.4);
+}
+
+/* Download Button - Gold */
+.notes-btn--download {
+  background: linear-gradient(135deg, #f7c634, #d4a520);
+  color: #000;
+  box-shadow: 0 4px 15px rgba(247, 198, 52, 0.3);
+}
+
+.notes-btn--download:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(247, 198, 52, 0.4);
+}
+
+/* Clear Button */
+.notes-btn--clear {
+  background: transparent;
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.notes-btn--clear:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.5);
+}
+
+/* Hint Text */
+.notes-hint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.4);
+  padding: 0 2rem 1rem;
+  text-align: center;
+}
+
+.notes-hint i {
+  color: rgba(168, 85, 247, 0.6);
+}
+
+/* Save Confirmation Dialog */
+.notes-confirm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.notes-confirm-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.notes-confirm-dialog {
+  background: linear-gradient(165deg, rgba(30, 25, 35, 0.98), rgba(20, 18, 25, 0.99));
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  border-radius: 20px;
+  padding: 2rem;
+  max-width: 400px;
+  text-align: center;
+  transform: scale(0.9);
+  transition: transform 0.3s ease;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+}
+
+.notes-confirm-overlay.active .notes-confirm-dialog {
+  transform: scale(1);
+}
+
+.notes-confirm-dialog h3 {
+  color: #fff;
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.notes-confirm-dialog p {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+.notes-confirm-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.notes-confirm-actions button {
+  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
-.notes-btn--save {
-  background: linear-gradient(135deg, var(--gold-500), var(--gold-600));
-  color: #000;
+.notes-confirm-save {
+  background: linear-gradient(135deg, #a855f7, #8b5cf6);
+  color: #fff;
+  border: none;
 }
 
-.notes-btn--save:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 20px rgba(247, 198, 52, 0.4);
-}
-
-.notes-btn--clear {
-  background: rgba(239, 68, 68, 0.15);
-  color: var(--live-red);
+.notes-confirm-discard {
+  background: transparent;
+  color: #ef4444;
   border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
-.notes-btn--clear:hover {
-  background: rgba(239, 68, 68, 0.25);
+.notes-confirm-cancel {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.notes-hint {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.5);
-  margin-top: 0.5rem;
+/* Toast for Notes */
+.notes-toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  padding: 0.875rem 1.5rem;
+  background: linear-gradient(135deg, #a855f7, #8b5cf6);
+  color: #fff;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  box-shadow: 0 10px 40px rgba(168, 85, 247, 0.4);
+  z-index: 10002;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.notes-hint i {
-  color: rgba(247, 198, 52, 0.7);
+.notes-toast.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
 }
 
+.notes-toast i {
+  margin-right: 0.5rem;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RESPONSIVE DESIGN
+   ═══════════════════════════════════════════════════════════════ */
+
+@media (max-width: 640px) {
+  .notes-overlay {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .notes-modal {
+    max-height: 90vh;
+    border-radius: 24px 24px 0 0;
+  }
+
+  .notes-header {
+    padding: 1.5rem 1.25rem 1rem;
+  }
+
+  .notes-container {
+    padding: 1rem 1.25rem;
+  }
+
+  .notes-textarea {
+    min-height: 150px;
+    padding: 1rem;
+    font-size: 0.9rem;
+  }
+
+  .notes-actions {
+    padding: 1rem 1.25rem 1.5rem;
+    gap: 0.5rem;
+  }
+
+  .notes-btn {
+    flex: 1;
+    min-width: auto;
+    padding: 0.75rem 1rem;
+    font-size: 0.85rem;
+  }
+}
 /* ─────────────────────────────────────────────────────────────────────────
    RANDOM SHABAD MODAL
    ───────────────────────────────────────────────────────────────────────── */
-.shabad-container {
-  min-height: 200px;
+/* ─────────────────────────────────────────────────────────────────────────
+   🙏 DIVINE SHABAD MODAL - Sacred Reading Experience
+   ───────────────────────────────────────────────────────────────────────── */
+
+/* CSS Variables for Sacred Theme */
+:root {
+  --sacred-gold: #f7c634;
+  --sacred-gold-light: #ffd966;
+  --sacred-gold-dark: #c9a227;
+  --divine-glow: rgba(247, 198, 52, 0.15);
+  --manuscript-bg: linear-gradient(165deg, 
+    rgba(30, 25, 20, 0.98) 0%, 
+    rgba(20, 18, 15, 0.99) 50%,
+    rgba(25, 22, 18, 0.98) 100%);
+  --sacred-border: rgba(247, 198, 52, 0.25);
+  --text-divine: rgba(255, 255, 255, 0.95);
+  --text-sacred: rgba(255, 255, 255, 0.75);
 }
 
-/* Loading State */
+/* ═══════════════════════════════════════════════════════════════════════════
+   MODAL OVERLAY - The Divine Veil
+   ═══════════════════════════════════════════════════════════════════════════ */
+.shabad-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  
+  /* Divine backdrop */
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 0, 0, 0.75) 0%,
+    rgba(0, 0, 0, 0.9) 100%
+  );
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  
+  /* Entrance animation */
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.shabad-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Sacred ambient glow behind modal */
+.shabad-overlay::before {
+  content: '';
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(
+    circle,
+    rgba(247, 198, 52, 0.08) 0%,
+    transparent 70%
+  );
+  border-radius: 50%;
+  pointer-events: none;
+  animation: divineBreath 8s ease-in-out infinite;
+}
+
+@keyframes divineBreath {
+  0%, 100% { 
+    transform: scale(1); 
+    opacity: 0.6; 
+  }
+  50% { 
+    transform: scale(1.15); 
+    opacity: 1; 
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MODAL CONTAINER - The Sacred Manuscript
+   ═══════════════════════════════════════════════════════════════════════════ */
+.shabad-modal {
+  position: relative;
+  width: 100%;
+  max-width: 720px;
+  max-height: 90vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  
+  /* Sacred manuscript background */
+  background: var(--manuscript-bg);
+  border-radius: 24px;
+  
+  /* Divine golden border */
+  border: 1px solid var(--sacred-border);
+  box-shadow: 
+    0 0 0 1px rgba(247, 198, 52, 0.1),
+    0 25px 80px -20px rgba(0, 0, 0, 0.8),
+    0 0 100px -50px rgba(247, 198, 52, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  
+  /* Entrance animation */
+  transform: scale(0.9) translateY(30px);
+  opacity: 0;
+  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.shabad-overlay.active .shabad-modal {
+  transform: scale(1) translateY(0);
+  opacity: 1;
+}
+
+/* Custom scrollbar for modal */
+.shabad-modal::-webkit-scrollbar {
+  width: 6px;
+}
+
+.shabad-modal::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 3px;
+}
+
+.shabad-modal::-webkit-scrollbar-thumb {
+  background: rgba(247, 198, 52, 0.3);
+  border-radius: 3px;
+}
+
+.shabad-modal::-webkit-scrollbar-thumb:hover {
+  background: rgba(247, 198, 52, 0.5);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   DECORATIVE ELEMENTS - Sacred Ornaments
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Top decorative border */
+.shabad-modal::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--sacred-gold-dark) 20%,
+    var(--sacred-gold) 50%,
+    var(--sacred-gold-dark) 80%,
+    transparent 100%
+  );
+  border-radius: 0 0 4px 4px;
+  opacity: 0.8;
+}
+
+/* Corner ornaments */
+.shabad-modal::after {
+  content: '☬';
+  position: absolute;
+  top: -35px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 2rem;
+  color: var(--sacred-gold);
+  text-shadow: 0 0 30px rgba(247, 198, 52, 0.6);
+  animation: sacredGlow 3s ease-in-out infinite;
+}
+
+@keyframes sacredGlow {
+  0%, 100% { 
+    opacity: 0.7;
+    text-shadow: 0 0 20px rgba(247, 198, 52, 0.4);
+  }
+  50% { 
+    opacity: 1;
+    text-shadow: 0 0 40px rgba(247, 198, 52, 0.8);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MODAL HEADER
+   ═══════════════════════════════════════════════════════════════════════════ */
+.shabad-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.75rem 2rem 1.25rem;
+  border-bottom: 1px solid rgba(247, 198, 52, 0.1);
+}
+
+.shabad-header__title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.shabad-header__icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--sacred-gold), var(--sacred-gold-dark));
+  border-radius: 12px;
+  font-size: 1.2rem;
+  animation: gentleFloat 4s ease-in-out infinite;
+}
+
+@keyframes gentleFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+.shabad-header h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-divine);
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+.shabad-header h2 span {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--text-sacred);
+  margin-top: 2px;
+}
+
+/* Close Button */
+.shabad-close {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  color: var(--text-sacred);
+  font-size: 1.25rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.shabad-close:hover {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+  transform: rotate(90deg);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SHABAD CONTAINER
+   ═══════════════════════════════════════════════════════════════════════════ */
+.shabad-container {
+  padding: 2rem;
+  min-height: 280px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   LOADING STATE - Divine Patience
+   ═══════════════════════════════════════════════════════════════════════════ */
 .shabad-loading {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 3rem;
-  gap: 1rem;
+  padding: 4rem 2rem;
+  gap: 1.5rem;
 }
 
 .shabad-loading__spinner {
-  width: 50px;
-  height: 50px;
-  border: 3px solid rgba(247, 198, 52, 0.2);
-  border-top-color: var(--gold-500);
+  position: relative;
+  width: 60px;
+  height: 60px;
+}
+
+.shabad-loading__spinner::before,
+.shabad-loading__spinner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
   border-radius: 50%;
-  animation: spin 1s linear infinite;
+  border: 2px solid transparent;
 }
 
-.shabad-loading p {
-  color: rgba(255, 255, 255, 0.7);
+.shabad-loading__spinner::before {
+  border-top-color: var(--sacred-gold);
+  border-right-color: var(--sacred-gold);
+  animation: sacredSpin 1.2s linear infinite;
+}
+
+.shabad-loading__spinner::after {
+  inset: 6px;
+  border-bottom-color: var(--sacred-gold-dark);
+  border-left-color: var(--sacred-gold-dark);
+  animation: sacredSpin 1.8s linear infinite reverse;
+}
+
+@keyframes sacredSpin {
+  to { transform: rotate(360deg); }
+}
+
+.shabad-loading__text {
+  color: var(--text-sacred);
   font-size: 0.95rem;
+  letter-spacing: 0.5px;
+  animation: fadeInOut 2s ease-in-out infinite;
 }
 
-/* Shabad Content */
+@keyframes fadeInOut {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SHABAD CONTENT - The Sacred Words
+   ═══════════════════════════════════════════════════════════════════════════ */
 .shabad-content {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.75rem;
+  animation: contentReveal 0.6s ease-out;
+}
+
+@keyframes contentReveal {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Ang Number Badge */
 .shabad-ang {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  background: linear-gradient(135deg, rgba(247, 198, 52, 0.15), rgba(247, 198, 52, 0.05));
-  border: 1px solid rgba(247, 198, 52, 0.3);
-  border-radius: 20px;
+  gap: 0.75rem;
+  padding: 0.6rem 1.25rem;
+  background: linear-gradient(
+    135deg,
+    rgba(247, 198, 52, 0.12) 0%,
+    rgba(247, 198, 52, 0.05) 100%
+  );
+  border: 1px solid var(--sacred-border);
+  border-radius: 50px;
   width: fit-content;
+  margin: 0 auto;
+  animation: slideDown 0.5s ease-out 0.1s both;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .shabad-ang__label {
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.7rem;
+  color: var(--text-sacred);
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 1.5px;
+  font-weight: 500;
 }
 
 .shabad-ang__number {
   font-size: 1.1rem;
   font-weight: 700;
-  color: var(--gold-500);
+  color: var(--sacred-gold);
+  font-family: var(--font-gurmukhi), serif;
 }
 
-/* Gurmukhi Text */
+/* ═══════════════════════════════════════════════════════════════════════════
+   GURMUKHI TEXT - The Divine Scripture
+   ═══════════════════════════════════════════════════════════════════════════ */
+.shabad-gurmukhi-wrapper {
+  position: relative;
+  padding: 0.5rem;
+  animation: slideDown 0.5s ease-out 0.2s both;
+}
+
+/* Decorative corner flourishes */
+.shabad-gurmukhi-wrapper::before,
+.shabad-gurmukhi-wrapper::after {
+  content: '❈';
+  position: absolute;
+  color: var(--sacred-gold);
+  opacity: 0.4;
+  font-size: 1rem;
+}
+
+.shabad-gurmukhi-wrapper::before {
+  top: 0;
+  left: 0;
+}
+
+.shabad-gurmukhi-wrapper::after {
+  bottom: 0;
+  right: 0;
+}
+
 .shabad-gurmukhi {
-  font-family: var(--font-gurmukhi);
-  font-size: 1.5rem;
-  line-height: 2.2;
+  font-family: var(--font-gurmukhi), 'Noto Sans Gurmukhi', serif;
+  font-size: 1.7rem;
+  line-height: 2.4;
   color: #fff;
   text-align: center;
-  padding: 1.5rem;
-  background: rgba(247, 198, 52, 0.05);
-  border-radius: 12px;
-  border-left: 4px solid var(--gold-500);
+  padding: 2rem 1.5rem;
+  
+  /* Sacred parchment feel */
+  background: linear-gradient(
+    180deg,
+    rgba(247, 198, 52, 0.08) 0%,
+    rgba(247, 198, 52, 0.03) 50%,
+    rgba(247, 198, 52, 0.08) 100%
+  );
+  border-radius: 16px;
+  
+  /* Divine border */
+  border: 1px solid rgba(247, 198, 52, 0.15);
+  border-left: 4px solid var(--sacred-gold);
+  
+  /* Subtle inner glow */
+  box-shadow: 
+    inset 0 0 60px rgba(247, 198, 52, 0.03),
+    0 4px 20px rgba(0, 0, 0, 0.2);
+  
+  /* Text rendering */
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Transliteration */
+/* Highlight important words (Waheguru, etc.) */
+.shabad-gurmukhi .highlight {
+  color: var(--sacred-gold-light);
+  text-shadow: 0 0 20px rgba(247, 198, 52, 0.4);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TRANSLITERATION - The Bridge
+   ═══════════════════════════════════════════════════════════════════════════ */
 .shabad-transliteration {
-  font-size: 1rem;
-  line-height: 1.8;
-  color: rgba(255, 255, 255, 0.8);
+  font-size: 1.05rem;
+  line-height: 2;
+  color: var(--text-sacred);
   text-align: center;
   font-style: italic;
-  padding: 1rem;
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  letter-spacing: 0.3px;
+  animation: slideDown 0.5s ease-out 0.3s both;
 }
 
-/* English Translation */
+/* ═══════════════════════════════════════════════════════════════════════════
+   ENGLISH TRANSLATION - Understanding
+   ═══════════════════════════════════════════════════════════════════════════ */
 .shabad-translation {
-  font-size: 1rem;
-  line-height: 1.8;
-  color: rgba(255, 255, 255, 0.9);
+  position: relative;
+  font-size: 1.05rem;
+  line-height: 1.9;
+  color: var(--text-divine);
   text-align: center;
-  padding: 1rem;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
+  padding: 1.5rem 2rem;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.04) 0%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  animation: slideDown 0.5s ease-out 0.4s both;
 }
 
-/* Source Info */
+/* Quote marks */
+.shabad-translation::before {
+  content: '"';
+  position: absolute;
+  top: 0.5rem;
+  left: 1rem;
+  font-size: 2.5rem;
+  color: var(--sacred-gold);
+  opacity: 0.3;
+  font-family: Georgia, serif;
+  line-height: 1;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SOURCE INFO - The Origin
+   ═══════════════════════════════════════════════════════════════════════════ */
 .shabad-source {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.5);
+  gap: 1.25rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  animation: slideDown 0.5s ease-out 0.5s both;
 }
 
-.shabad-source span {
+.shabad-source__item {
   display: flex;
   align-items: center;
-  gap: 0.3rem;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-sacred);
+  padding: 0.4rem 0.8rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  transition: all 0.3s ease;
 }
 
-.shabad-source i {
-  color: var(--gold-500);
+.shabad-source__item:hover {
+  background: rgba(247, 198, 52, 0.1);
+  color: var(--sacred-gold-light);
 }
 
-/* Error State */
+.shabad-source__item i {
+  color: var(--sacred-gold);
+  font-size: 0.9rem;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ERROR STATE - Graceful Fallback
+   ═══════════════════════════════════════════════════════════════════════════ */
 .shabad-error {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 3rem;
-  gap: 1rem;
-  color: var(--live-red);
+  padding: 4rem 2rem;
+  gap: 1.25rem;
+  text-align: center;
 }
 
-.shabad-error i {
-  font-size: 2.5rem;
+.shabad-error__icon {
+  width: 70px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(239, 68, 68, 0.1);
+  border-radius: 50%;
+  color: #ef4444;
+  font-size: 1.75rem;
+  animation: gentlePulse 2s ease-in-out infinite;
+}
+
+@keyframes gentlePulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.shabad-error h3 {
+  font-size: 1.1rem;
+  color: var(--text-divine);
+  margin: 0;
 }
 
 .shabad-error p {
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--text-sacred);
+  font-size: 0.9rem;
+  max-width: 300px;
 }
 
-/* Shabad Actions */
+/* ═══════════════════════════════════════════════════════════════════════════
+   ACTION BUTTONS - Divine Actions
+   ═══════════════════════════════════════════════════════════════════════════ */
 .shabad-actions {
   display: flex;
-  gap: 0.75rem;
+  gap: 1rem;
   flex-wrap: wrap;
   justify-content: center;
-  margin-top: 1.5rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1.75rem 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 0 0 24px 24px;
 }
 
 .shabad-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.875rem 1.75rem;
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
 }
 
+/* Ripple effect base */
+.shabad-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(255,255,255,0.3) 0%, transparent 70%);
+  transform: scale(0);
+  opacity: 0;
+  transition: transform 0.5s, opacity 0.3s;
+}
+
+.shabad-btn:active::after {
+  transform: scale(2);
+  opacity: 0;
+  transition: 0s;
+}
+
+/* New Shabad Button - Primary */
 .shabad-btn--new {
-  background: linear-gradient(135deg, var(--success), #10b981);
-  color: #fff;
+  background: linear-gradient(135deg, var(--sacred-gold), var(--sacred-gold-dark));
+  color: #1a1a1a;
+  min-width: 160px;
+  box-shadow: 0 4px 20px rgba(247, 198, 52, 0.3);
 }
 
 .shabad-btn--new:hover {
   transform: translateY(-2px);
-  box-shadow: 0 5px 20px rgba(34, 197, 94, 0.4);
+  box-shadow: 0 8px 30px rgba(247, 198, 52, 0.4);
 }
 
+.shabad-btn--new:active {
+  transform: translateY(0);
+}
+
+.shabad-btn--new i {
+  transition: transform 0.3s ease;
+}
+
+.shabad-btn--new:hover i {
+  transform: rotate(180deg);
+}
+
+/* Copy Button */
 .shabad-btn--copy {
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-divine);
+  border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .shabad-btn--copy:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
 }
 
+/* Share Button */
+.shabad-btn--share {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+  border: 1px solid rgba(59, 130, 246, 0.25);
+}
+
+.shabad-btn--share:hover {
+  background: rgba(59, 130, 246, 0.25);
+  transform: translateY(-2px);
+}
+
+/* Bookmark Button */
+.shabad-btn--bookmark {
+  background: rgba(236, 72, 153, 0.15);
+  color: #f472b6;
+  border: 1px solid rgba(236, 72, 153, 0.25);
+}
+
+.shabad-btn--bookmark:hover {
+  background: rgba(236, 72, 153, 0.25);
+  transform: translateY(-2px);
+}
+
+.shabad-btn--bookmark.active {
+  background: rgba(236, 72, 153, 0.3);
+}
+
+.shabad-btn--bookmark.active i {
+  animation: heartBeat 0.6s ease-out;
+}
+
+@keyframes heartBeat {
+  0%, 100% { transform: scale(1); }
+  25% { transform: scale(1.3); }
+  50% { transform: scale(1); }
+  75% { transform: scale(1.2); }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   COPIED TOOLTIP
+   ═══════════════════════════════════════════════════════════════════════════ */
+.shabad-tooltip {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, var(--sacred-gold), var(--sacred-gold-dark));
+  color: #1a1a1a;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 50px;
+  box-shadow: 0 10px 40px rgba(247, 198, 52, 0.4);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.shabad-tooltip.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+.shabad-tooltip i {
+  font-size: 1rem;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   RESPONSIVE DESIGN
+   ═══════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .shabad-overlay {
+    padding: 1rem;
+    align-items: flex-end;
+  }
+  
+  .shabad-modal {
+    max-height: 85vh;
+    border-radius: 24px 24px 0 0;
+    margin-bottom: 0;
+  }
+  
+  .shabad-overlay.active .shabad-modal {
+    transform: scale(1) translateY(0);
+  }
+  
+  .shabad-modal::after {
+    top: -30px;
+    font-size: 1.5rem;
+  }
+  
+  .shabad-header {
+    padding: 1.5rem 1.25rem 1rem;
+  }
+  
+  .shabad-header h2 {
+    font-size: 1.1rem;
+  }
+  
+  .shabad-container {
+    padding: 1.25rem;
+  }
+  
+  .shabad-gurmukhi {
+    font-size: 1.rem;
+    line-height: 2;
+    padding: 1.5rem 1rem;
+  }
+  
+  .shabad-transliteration,
+  .shabad-translation {
+    font-size: 0.9rem;
+    padding: 1rem;
+  }
+  
+  .shabad-actions {
+    padding: 1.25rem;
+    gap: 0.75rem;
+  }
+  
+  .shabad-btn {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.85rem;
+    flex: 1;
+    min-width: 120px;
+  }
+  
+  .shabad-source {
+    gap: 0.75rem;
+  }
+  
+  .shabad-source__item {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .shabad-gurmukhi {
+    font-size: 1.25rem;
+    line-height: 2;
+  }
+  
+  .shabad-btn--new {
+    min-width: 100%;
+    order: -1;
+  }
+  
+  .shabad-btn--copy,
+  .shabad-btn--share,
+  .shabad-btn--bookmark {
+    flex: 1;
+    min-width: auto;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   REDUCED MOTION - Accessibility
+   ═══════════════════════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  .shabad-overlay,
+  .shabad-modal,
+  .shabad-content,
+  .shabad-btn {
+    transition: opacity 0.2s ease;
+    animation: none;
+  }
+  
+  .shabad-loading__spinner::before,
+  .shabad-loading__spinner::after {
+    animation-duration: 2s;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   PRINT STYLES
+   ═══════════════════════════════════════════════════════════════════════════ */
+@media print {
+  .shabad-overlay {
+    position: static;
+    background: none;
+  }
+  
+  .shabad-modal {
+    box-shadow: none;
+    border: 2px solid #ccc;
+  }
+  
+  .shabad-close,
+  .shabad-actions {
+    display: none;
+  }
+  
+  .shabad-gurmukhi {
+    border-left-color: #000;
+    color: #000;
+  }
+}
 /* ═══════════════════════════════════════════════════════════════════════════════
    17. TOAST NOTIFICATIONS
 ═══════════════════════════════════════════════════════════════════════════════ */
@@ -4106,6 +5220,9 @@ body {
   .install-prompt {
     bottom: max(20px, calc(env(safe-area-inset-bottom) + 10px));
   }
+}
+#nitnemCard {
+  cursor: pointer;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════════
