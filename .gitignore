@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Environment variables (if you add them later)
+.env
+.env.local
+.env.production
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE/Editor folders
+.vscode/
+.idea/
+
+# Runtime data
+pids/
+*.pid
+*.seed
+
+# Optional: If radio-state.json should reset on each deploy
+# backend/radio-state.json

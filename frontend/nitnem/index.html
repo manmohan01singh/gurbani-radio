@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="pa" dir="ltr" data-theme="day">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ਨਿਤਨੇਮ — Daily Sikh Prayers. Read Japji Sahib, Jaap Sahib, and all seven Banis in beautiful Gurmukhi.">
+  <meta name="theme-color" content="#FBF7F0">
+  
+  <title>ਨਿਤਨੇਮ — Daily Path | Gurbani Live</title>
+  
+  <!-- Preconnect -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Noto+Sans+Gurmukhi:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheets — ORDER MATTERS -->
+  <link rel="stylesheet" href="css/themes.css">
+  <link rel="stylesheet" href="css/nitnem.css">
+  <link rel="stylesheet" href="css/setting-panel.css">
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>ੴ</text></svg>">
+</head>
+
+<body>
+  <!-- Skip Link -->
+  <a href="#main-content" class="skip-link">Skip to Banis</a>
+  
+  <!-- ═══════════════════════════════════════════════════════════
+       SETTINGS PANEL (Fixed Overlay)
+  ═══════════════════════════════════════════════════════════ -->
+  <div id="settingsPanel" class="settings-panel" role="dialog" aria-label="Reader Settings" aria-hidden="true">
+    <div class="settings-panel__backdrop"></div>
+    <div class="settings-panel__content">
+      
+      <!-- Panel Header -->
+      <div class="settings-panel__header">
+        <h2 class="settings-panel__title">ਸੈਟਿੰਗਾਂ</h2>
+        <button id="settingsClose" class="settings-panel__close" aria-label="Close settings">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 6L6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      
+      <!-- Theme Toggle -->
+      <div class="settings-group">
+        <label class="settings-group__label">ਥੀਮ / Theme</label>
+        <div class="theme-toggle">
+          <button id="themeDayBtn" class="theme-toggle__btn theme-toggle__btn--day" aria-pressed="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="4"/>
+              <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+            </svg>
+            <span>Day</span>
+          </button>
+          <button id="themeNightBtn" class="theme-toggle__btn theme-toggle__btn--night" aria-pressed="false">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+            </svg>
+            <span>Night</span>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Font Size (For Future Use) -->
+      <div class="settings-group">
+        <label class="settings-group__label">ਅੱਖਰ ਦਾ ਆਕਾਰ / Font Size</label>
+        <div class="font-size-controls">
+          <button id="fontDecrease" class="font-size-btn" aria-label="Decrease font size">
+            <span>A−</span>
+          </button>
+          <span id="fontSizeValue" class="font-size-value">100%</span>
+          <button id="fontIncrease" class="font-size-btn" aria-label="Increase font size">
+            <span>A+</span>
+          </button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+  <!-- ═══════════════════════════════════════════════════════════
+       GUTKA HEADER
+  ═══════════════════════════════════════════════════════════ -->
+  <header class="gutka-header" role="banner">
+    <div class="gutka-header__container">
+      
+      <!-- Navigation Bar -->
+      <nav class="gutka-nav" aria-label="Main navigation">
+        <!-- Back Link -->
+        <a href="../index.html" class="gutka-nav__back">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+          <span>Back to Home</span>
+        </a>
+        
+        <!-- Settings Toggle Button -->
+        <button id="settingsToggle" class="settings-toggle" aria-label="Open settings" aria-expanded="false" aria-controls="settingsPanel">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+        </button>
+      </nav>
+      
+      <!-- Sacred Symbol -->
+      <div class="gutka-header__symbol" aria-hidden="true">
+        <span class="ik-onkar">ੴ</span>
+      </div>
+      
+      <!-- Title -->
+      <h1 class="gutka-header__title">
+        <span class="gutka-header__title-gurmukhi">ਨਿਤਨੇਮ</span>
+        <span class="gutka-header__title-english">Daily Path</span>
+      </h1>
+      
+      <!-- Subtitle -->
+      <p class="gutka-header__subtitle">ਰੋਜ਼ਾਨਾ ਦੀਆਂ ਬਾਣੀਆਂ</p>
+      
+      <!-- Decorative Divider -->
+      <div class="gutka-divider" aria-hidden="true">
+        <span class="gutka-divider__line"></span>
+        <span class="gutka-divider__symbol">☬</span>
+        <span class="gutka-divider__line"></span>
+      </div>
+      
+    </div>
+  </header>
+  
+  <!-- ═══════════════════════════════════════════════════════════
+       MAIN CONTENT — BANI LIST
+  ═══════════════════════════════════════════════════════════ -->
+  <main class="gutka-main" id="main-content" role="main">
+    
+    <!-- ═══════ MORNING BANIS (Amritvela) ═══════ -->
+    <section class="bani-section" aria-labelledby="morning-heading">
+      <header class="bani-section__heading">
+        <div class="bani-section__time-icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+          </svg>
+        </div>
+        <h2 id="morning-heading" class="bani-section__label">
+          ਅੰਮ੍ਰਿਤ ਵੇਲਾ
+          <span class="bani-section__label-english">Morning</span>
+        </h2>
+      </header>
+      
+      <ul class="bani-list" role="list">
+        <!-- 1. Japji Sahib -->
+        <li class="bani-card">
+          <a href="japji-sahib.html" class="bani-card__link">
+            <div class="bani-card__content">
+              <span class="bani-card__number" aria-hidden="true">੧</span>
+              <div class="bani-card__info">
+                <h3 class="bani-card__title">ਜਪੁਜੀ ਸਾਹਿਬ</h3>
+                <p class="bani-card__meta">
+                  <span>Japji Sahib</span>
+                  <span class="bani-card__separator">•</span>
+                  <span>ਗੁਰੂ ਨਾਨਕ ਦੇਵ ਜੀ</span>
+                </p>
+              </div>
+            </div>
+            <span class="bani-card__arrow" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </span>
+          </a>
+        </li>
+        
+        <!-- 2. Jaap Sahib -->
+        <li class="bani-card">
+          <a href="jaap-sahib.html" class="bani-card__link">
+            <div class="bani-card__content">
+              <span class="bani-card__number" aria-hidden="true">੨</span>
+              <div class="bani-card__info">
+                <h3 class="bani-card__title">ਜਾਪੁ ਸਾਹਿਬ</h3>
+                <p class="bani-card__meta">
+                  <span>Jaap Sahib</span>
+                  <span class="bani-card__separator">•</span>
+                  <span>ਗੁਰੂ ਗੋਬਿੰਦ ਸਿੰਘ ਜੀ</span>
+                </p>
+              </div>
+            </div>
+            <span class="bani-card__arrow" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </span>
+          </a>
+        </li>
+        
+        <!-- 3. Tav Prasad Savaiye -->
+        <li class="bani-card">
+          <a href="tav-prasad-savaiye.html" class="bani-card__link">
+            <div class="bani-card__content">
+              <span class="bani-card__number" aria-hidden="true">੩</span>
+              <div class="bani-card__info">
+                <h3 class="bani-card__title">ਤ੍ਵ ਪ੍ਰਸਾਦਿ ਸਵੱਯੇ</h3>
+                <p class="bani-card__meta">
+                  <span>Tav Prasad Savaiye</span>
+                  <span class="bani-card__separator">•</span>
+                  <span>ਗੁਰੂ ਗੋਬਿੰਦ ਸਿੰਘ ਜੀ</span>
+                </p>
+              </div>
+            </div>
+            <span class="bani-card__arrow" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </span>
+          </a>
+        </li>
+        
+        <!-- 4. Chaupai Sahib -->
+        <li class="bani-card">
+          <a href="chaupai-sahib.html" class="bani-card__link">
+            <div class="bani-card__content">
+              <span class="bani-card__number" aria-hidden="true">੪</span>
+              <div class="bani-card__info">
+                <h3 class="bani-card__title">ਚੌਪਈ ਸਾਹਿਬ</h3>
+                <p class="bani-card__meta">
+                  <span>Chaupai Sahib</span>
+                  <span class="bani-card__separator">•</span>
+                  <span>ਗੁਰੂ ਗੋਬਿੰਦ ਸਿੰਘ ਜੀ</span>
+                </p>
+              </div>
+            </div>
+            <span class="bani-card__arrow" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </span>
+          </a>
+        </li>
+        
+        <!-- 5. Anand Sahib -->
+        <li class="bani-card">
+          <a href="anand-sahib.html" class="bani-card__link">
+            <div class="bani-card__content">
+              <span class="bani-card__number" aria-hidden="true">੫</span>
+              <div class="bani-card__info">
+                <h3 class="bani-card__title">ਅਨੰਦੁ ਸਾਹਿਬ</h3>
+                <p class="bani-card__meta">
+                  <span>Anand Sahib</span>
+                  <span class="bani-card__separator">•</span>
+                  <span>ਗੁਰੂ ਅਮਰਦਾਸ ਜੀ</span>
+                </p>
+              </div>
+            </div>
+            <span class="bani-card__arrow" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </span>
+          </a>
+        </li>
+      </ul>
+    </section>
+    
+    <!-- Subtle Divider -->
+    <div class="gutka-divider gutka-divider--subtle" aria-hidden="true">
+      <span class="gutka-divider__line"></span>
+      <span class="gutka-divider__symbol">❖</span>
+      <span class="gutka-divider__line"></span>
+    </div>
+    
+    <!-- ═══════ EVENING BANI ═══════ -->
+    <section class="bani-section" aria-labelledby="evening-heading">
+      <header class="bani-section__heading">
+        <div class="bani-section__time-icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+          </svg>
+        </div>
+        <h2 id="evening-heading" class="bani-section__label">
+          ਸ਼ਾਮ
+          <span class="bani-section__label-english">Evening</span>
+        </h2>
+      </header>
+      
+      <ul class="bani-list" role="list">
+        <!-- 6. Rehras Sahib -->
+        <li class="bani-card">
+          <a href="rehras-sahib.html" class="bani-card__link">
+            <div class="bani-card__content">
+              <span class="bani-card__number" aria-hidden="true">੬</span>
+              <div class="bani-card__info">
+                <h3 class="bani-card__title">ਰਹਰਾਸਿ ਸਾਹਿਬ</h3>
+                <p class="bani-card__meta">
+                  <span>Rehras Sahib</span>
+                  <span class="bani-card__separator">•</span>
+                  <span>ਸੰਧਿਆ ਦੀ ਬਾਣੀ</span>
+                </p>
+              </div>
+            </div>
+            <span class="bani-card__arrow" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </span>
+          </a>
+        </li>
+      </ul>
+    </section>
+    
+    <!-- Subtle Divider -->
+    <div class="gutka-divider gutka-divider--subtle" aria-hidden="true">
+      <span class="gutka-divider__line"></span>
+      <span class="gutka-divider__symbol">❖</span>
+      <span class="gutka-divider__line"></span>
+    </div>
+    
+    <!-- ═══════ NIGHT BANI ═══════ -->
+    <section class="bani-section" aria-labelledby="night-heading">
+      <header class="bani-section__heading">
+        <div class="bani-section__time-icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+            <path d="M19 3v4M21 5h-4"/>
+          </svg>
+        </div>
+        <h2 id="night-heading" class="bani-section__label">
+          ਰਾਤ
+          <span class="bani-section__label-english">Night</span>
+        </h2>
+      </header>
+      
+      <ul class="bani-list" role="list">
+        <!-- 7. Sohila Sahib -->
+        <li class="bani-card">
+          <a href="sohila-sahib.html" class="bani-card__link">
+            <div class="bani-card__content">
+              <span class="bani-card__number" aria-hidden="true">੭</span>
+              <div class="bani-card__info">
+                <h3 class="bani-card__title">ਸੋਹਿਲਾ ਸਾਹਿਬ</h3>
+                <p class="bani-card__meta">
+                  <span>Sohila Sahib</span>
+                  <span class="bani-card__separator">•</span>
+                  <span>ਕੀਰਤਨ ਸੋਹਿਲਾ</span>
+                </p>
+              </div>
+            </div>
+            <span class="bani-card__arrow" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </span>
+          </a>
+        </li>
+      </ul>
+    </section>
+    
+  </main>
+  
+  <!-- ═══════════════════════════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════════════════════════ -->
+  <footer class="gutka-footer" role="contentinfo">
+    <!-- Decorative Divider -->
+    <div class="gutka-divider" aria-hidden="true">
+      <span class="gutka-divider__line"></span>
+      <span class="gutka-divider__symbol">☬</span>
+      <span class="gutka-divider__line"></span>
+    </div>
+    
+    <p class="gutka-footer__blessing" lang="pa">
+      ਧੰਨ ਸ੍ਰੀ ਗੁਰੂ ਗ੍ਰੰਥ ਸਾਹਿਬ ਜੀ
+      <span class="gutka-footer__waheguru">ਵਾਹਿਗੁਰੂ ਜੀ ਕਾ ਖ਼ਾਲਸਾ ॥ ਵਾਹਿਗੁਰੂ ਜੀ ਕੀ ਫ਼ਤਿਹ ॥</span>
+    </p>
+  </footer>
+  
+  <!-- ═══════════════════════════════════════════════════════════
+       JAVASCRIPT
+  ═══════════════════════════════════════════════════════════ -->
+  <script src="js/reader.js"></script>
+  
+</body>
+</html>

@@ -1,0 +1,247 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   THEMES.CSS — Nitnem Module
+   Purpose: CSS Custom Properties (Variables) for Day & Night Themes
+   Author: Gurbani Live
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   ROOT DEFAULTS & THEME TRANSITION
+   ───────────────────────────────────────────────────────────────────────────── */
+:root {
+  /* Smooth theme transition */
+  --theme-transition: 0.4s ease;
+  
+  /* Font families */
+  --font-gurmukhi: 'Noto Sans Gurmukhi', sans-serif;
+  --font-english: 'Cormorant Garamond', Georgia, serif;
+  --font-system: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  
+  /* Base spacing scale */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 4rem;
+  
+  /* Border radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+  
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.25s ease;
+  --transition-slow: 0.4s ease;
+  
+  /* Z-index scale */
+  --z-base: 1;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-overlay: 300;
+  --z-modal: 400;
+  --z-toast: 500;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   DAY THEME — Warm, Spiritual, Readable
+   Inspired by: Antique Gutka pages, morning sunlight, sacred spaces
+   ───────────────────────────────────────────────────────────────────────────── */
+:root[data-theme="day"] {
+  /* ══════ Primary Colors ══════ */
+  --color-bg-primary: #FBF7F0;
+  --color-bg-secondary: #F5EDE0;
+  --color-bg-tertiary: #EDE4D3;
+  --color-bg-elevated: #FFFFFF;
+  
+  /* ══════ Text Colors ══════ */
+  --color-text-primary: #2C1810;
+  --color-text-secondary: #5C4A3D;
+  --color-text-tertiary: #8B7355;
+  --color-text-muted: #A69580;
+  --color-text-inverse: #FFFFFF;
+  
+  /* ══════ Accent Colors ══════ */
+  --color-accent-primary: #C4841D;
+  --color-accent-primary-hover: #A66E15;
+  --color-accent-secondary: #B8860B;
+  --color-accent-glow: rgba(196, 132, 29, 0.15);
+  
+  /* ══════ Sacred/Spiritual Colors ══════ */
+  --color-sacred-gold: #D4A84B;
+  --color-sacred-saffron: #FF9933;
+  --color-sacred-deep: #8B4513;
+  --color-ik-onkar: #C4841D;
+  
+  /* ══════ UI Colors ══════ */
+  --color-border-light: rgba(139, 115, 85, 0.15);
+  --color-border-medium: rgba(139, 115, 85, 0.25);
+  --color-border-strong: rgba(139, 115, 85, 0.4);
+  
+  --color-divider: rgba(139, 115, 85, 0.2);
+  --color-divider-symbol: #C4841D;
+  
+  /* ══════ Card Colors ══════ */
+  --color-card-bg: #FFFFFF;
+  --color-card-bg-hover: #FDF9F3;
+  --color-card-border: rgba(139, 115, 85, 0.12);
+  --color-card-shadow: rgba(44, 24, 16, 0.08);
+  
+  /* ══════ Header Colors ══════ */
+  --color-header-bg: linear-gradient(180deg, #FBF7F0 0%, #F5EDE0 100%);
+  --color-header-pattern: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5L35 25H55L39 37L44 57L30 45L16 57L21 37L5 25H25L30 5Z' fill='%23C4841D' fill-opacity='0.03'/%3E%3C/svg%3E");
+  
+  /* ══════ Shadows ══════ */
+  --shadow-sm: 0 1px 2px rgba(44, 24, 16, 0.05);
+  --shadow-md: 0 4px 12px rgba(44, 24, 16, 0.08);
+  --shadow-lg: 0 8px 24px rgba(44, 24, 16, 0.12);
+  --shadow-xl: 0 16px 48px rgba(44, 24, 16, 0.16);
+  --shadow-glow: 0 0 20px rgba(196, 132, 29, 0.2);
+  --shadow-card-hover: 0 8px 32px rgba(44, 24, 16, 0.15);
+  
+  /* ══════ Focus States ══════ */
+  --color-focus-ring: rgba(196, 132, 29, 0.5);
+  --shadow-focus: 0 0 0 3px var(--color-focus-ring);
+  
+  /* ══════ Overlay ══════ */
+  --color-overlay: rgba(44, 24, 16, 0.5);
+  --color-overlay-light: rgba(44, 24, 16, 0.3);
+  
+  /* ══════ Settings Panel ══════ */
+  --color-panel-bg: #FFFFFF;
+  --color-panel-border: rgba(139, 115, 85, 0.15);
+  --color-button-bg: #F5EDE0;
+  --color-button-bg-hover: #EDE4D3;
+  --color-button-bg-active: #C4841D;
+  --color-button-text-active: #FFFFFF;
+  
+  /* ══════ Scrollbar ══════ */
+  --color-scrollbar-track: #F5EDE0;
+  --color-scrollbar-thumb: #C4A77D;
+  --color-scrollbar-thumb-hover: #A68B5B;
+  
+  /* ══════ Selection ══════ */
+  --color-selection-bg: rgba(196, 132, 29, 0.2);
+  --color-selection-text: #2C1810;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   NIGHT THEME — Calm, Restful, Low Eye Strain
+   Inspired by: Night sky, peaceful meditation, candlelit reading
+   ───────────────────────────────────────────────────────────────────────────── */
+:root[data-theme="night"] {
+  /* ══════ Primary Colors ══════ */
+  --color-bg-primary: #0F0F0F;
+  --color-bg-secondary: #1A1A1A;
+  --color-bg-tertiary: #242424;
+  --color-bg-elevated: #1E1E1E;
+  
+  /* ══════ Text Colors ══════ */
+  --color-text-primary: #E8E4DC;
+  --color-text-secondary: #B8B0A0;
+  --color-text-tertiary: #8A8278;
+  --color-text-muted: #6B6560;
+  --color-text-inverse: #0F0F0F;
+  
+  /* ══════ Accent Colors ══════ */
+  --color-accent-primary: #E8B84A;
+  --color-accent-primary-hover: #F0C665;
+  --color-accent-secondary: #D4A84B;
+  --color-accent-glow: rgba(232, 184, 74, 0.15);
+  
+  /* ══════ Sacred/Spiritual Colors ══════ */
+  --color-sacred-gold: #E8B84A;
+  --color-sacred-saffron: #FFB347;
+  --color-sacred-deep: #C4841D;
+  --color-ik-onkar: #E8B84A;
+  
+  /* ══════ UI Colors ══════ */
+  --color-border-light: rgba(232, 228, 220, 0.08);
+  --color-border-medium: rgba(232, 228, 220, 0.12);
+  --color-border-strong: rgba(232, 228, 220, 0.2);
+  
+  --color-divider: rgba(232, 228, 220, 0.1);
+  --color-divider-symbol: #E8B84A;
+  
+  /* ══════ Card Colors ══════ */
+  --color-card-bg: #1A1A1A;
+  --color-card-bg-hover: #242424;
+  --color-card-border: rgba(232, 228, 220, 0.08);
+  --color-card-shadow: rgba(0, 0, 0, 0.3);
+  
+  /* ══════ Header Colors ══════ */
+  --color-header-bg: linear-gradient(180deg, #0F0F0F 0%, #1A1A1A 100%);
+  --color-header-pattern: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5L35 25H55L39 37L44 57L30 45L16 57L21 37L5 25H25L30 5Z' fill='%23E8B84A' fill-opacity='0.02'/%3E%3C/svg%3E");
+  
+  /* ══════ Shadows ══════ */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.4);
+  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 30px rgba(232, 184, 74, 0.15);
+  --shadow-card-hover: 0 8px 32px rgba(0, 0, 0, 0.5);
+  
+  /* ══════ Focus States ══════ */
+  --color-focus-ring: rgba(232, 184, 74, 0.5);
+  --shadow-focus: 0 0 0 3px var(--color-focus-ring);
+  
+  /* ══════ Overlay ══════ */
+  --color-overlay: rgba(0, 0, 0, 0.7);
+  --color-overlay-light: rgba(0, 0, 0, 0.5);
+  
+  /* ══════ Settings Panel ══════ */
+  --color-panel-bg: #1E1E1E;
+  --color-panel-border: rgba(232, 228, 220, 0.1);
+  --color-button-bg: #2A2A2A;
+  --color-button-bg-hover: #333333;
+  --color-button-bg-active: #E8B84A;
+  --color-button-text-active: #0F0F0F;
+  
+  /* ══════ Scrollbar ══════ */
+  --color-scrollbar-track: #1A1A1A;
+  --color-scrollbar-thumb: #3D3D3D;
+  --color-scrollbar-thumb-hover: #4D4D4D;
+  
+  /* ══════ Selection ══════ */
+  --color-selection-bg: rgba(232, 184, 74, 0.25);
+  --color-selection-text: #E8E4DC;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   THEME TRANSITIONS
+   Smooth color transitions when switching themes
+   ───────────────────────────────────────────────────────────────────────────── */
+html {
+  transition: 
+    background-color var(--theme-transition),
+    color var(--theme-transition);
+}
+
+body,
+.gutka-header,
+.gutka-main,
+.gutka-footer,
+.bani-card,
+.bani-card__link,
+.settings-panel,
+.settings-panel__content {
+  transition: 
+    background-color var(--theme-transition),
+    border-color var(--theme-transition),
+    box-shadow var(--theme-transition),
+    color var(--theme-transition);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   THEME META COLOR UPDATE (for mobile browser chrome)
+   ───────────────────────────────────────────────────────────────────────────── */
+:root[data-theme="day"] {
+  color-scheme: light;
+}
+
+:root[data-theme="night"] {
+  color-scheme: dark;
+}
