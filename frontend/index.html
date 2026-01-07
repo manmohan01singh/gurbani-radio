@@ -1,18 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
-  <!-- Add after <title> tag -->
-
-<!-- Preload critical font -->
-<link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style">
-
-<!-- Preload your main CSS -->
-<link rel="preload" href="style.css" as="style">
-
-<!-- Preconnect to external resources -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://cdnjs.cloudflare.com">
   <!-- ═══════════════════════════════════════════════════════════════════════════
        META TAGS & CONFIGURATION
   ═══════════════════════════════════════════════════════════════════════════ -->
@@ -57,6 +45,9 @@
   <meta property="twitter:description" content="Experience divine Gurbani Kirtan 24/7 from sacred Gurdwaras worldwide.">
   <meta property="twitter:image" content="assets/twitter-image.jpg">
   
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://gurbaniliveradio.com/">
+  
   <!-- PWA Manifest -->
   <link rel="manifest" href="manifest.json">
   
@@ -67,29 +58,255 @@
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
   <link rel="mask-icon" href="assets/safari-pinned-tab.svg" color="#f7c634">
   
-  <!-- Preconnect for Performance -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <!-- Preconnect to critical resources ONLY (max 4) -->
+
   
-  <!-- DNS Prefetch -->
-  <link rel="dns-prefetch" href="//fonts.googleapis.com">
+  <!-- DNS Prefetch for non-critical resources -->
   <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
   
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&family=Noto+Sans+Gurmukhi:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Preload critical assets -->
+  <link rel="preload" href="style.css" as="style">
+  <link rel="preload" href="assets/sacred-symbol.png" as="image" type="image/png">
   
-  <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <!-- Critical CSS - Inlined for Loading Screen -->
+  <style>
+    /* Critical CSS for initial render */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    html { 
+      font-size: 16px; 
+      -webkit-text-size-adjust: 100%;
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: -apple-system, swap,MacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: #020205;
+      color: #ffffff;
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    
+    /* Loading Screen Critical Styles */
+    .loading-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #020205 0%, #0a0a12 50%, #020205 100%);
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+    
+    .loading-screen.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    
+    .loader {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+    }
+    
+    .loader__logo {
+      position: relative;
+      width: 120px;
+      height: 120px;
+    }
+    
+    .loader__khanda-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .loader__outer-ring,
+    .loader__middle-ring,
+    .loader__inner-ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 2px solid transparent;
+    }
+    
+    .loader__outer-ring {
+      width: 120px;
+      height: 120px;
+      border-top-color: #f7c634;
+      animation: spin 2s linear infinite;
+    }
+    
+    .loader__middle-ring {
+      width: 90px;
+      height: 90px;
+      border-right-color: #dba520;
+      animation: spin 1.5s linear infinite reverse;
+    }
+    
+    .loader__inner-ring {
+      width: 60px;
+      height: 60px;
+      border-bottom-color: #f7c634;
+      animation: spin 1s linear infinite;
+    }
+    
+    .loader__core {
+      position: relative;
+      z-index: 1;
+    }
+    
+    .loader__symbol {
+      font-size: 2.5rem;
+      color: #f7c634;
+      text-shadow: 0 0 20px rgba(247, 198, 52, 0.5);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    
+    .loader__particles {
+      position: absolute;
+      inset: 0;
+    }
+    
+    .loader__particles span {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: #f7c634;
+      border-radius: 50%;
+      animation: orbit 3s linear infinite;
+    }
+    
+    .loader__particles span:nth-child(1) { animation-delay: 0s; }
+    .loader__particles span:nth-child(2) { animation-delay: 0.375s; }
+    .loader__particles span:nth-child(3) { animation-delay: 0.75s; }
+    .loader__particles span:nth-child(4) { animation-delay: 1.125s; }
+    .loader__particles span:nth-child(5) { animation-delay: 1.5s; }
+    .loader__particles span:nth-child(6) { animation-delay: 1.875s; }
+    .loader__particles span:nth-child(7) { animation-delay: 2.25s; }
+    .loader__particles span:nth-child(8) { animation-delay: 2.625s; }
+    
+    .loader__text {
+      text-align: center;
+    }
+    
+    .loader__title {
+      display: block;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #f7c634;
+      margin-bottom: 0.5rem;
+    }
+    
+    .loader__subtitle {
+      display: block;
+      font-size: 0.875rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
+    
+    .loader__progress {
+      width: 200px;
+      text-align: center;
+    }
+    
+    .loader__progress-track {
+      height: 3px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-bottom: 0.75rem;
+    }
+    
+    .loader__progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #f7c634, #dba520);
+      border-radius: 2px;
+      animation: progress 2.5s ease-out forwards;
+    }
+    
+    .loader__progress-glow {
+      display: none;
+    }
+    
+    .loader__progress-text {
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.5);
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(1.05); }
+    }
+    
+    @keyframes orbit {
+      0% { 
+        transform: rotate(0deg) translateX(55px) rotate(0deg);
+        opacity: 0;
+      }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { 
+        transform: rotate(360deg) translateX(55px) rotate(-360deg);
+        opacity: 0;
+      }
+    }
+    
+    @keyframes progress {
+      0% { width: 0%; }
+      100% { width: 100%; }
+    }
+    
+    /* Hide main content initially */
+    .app {
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+    
+    .loading-screen.hidden + .app,
+    .loading-screen.hidden ~ .app {
+      opacity: 1;
+    }
+    
+    /* Screen reader only */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+  </style>
   
   <!-- Main Stylesheet -->
-  <link rel="stylesheet" href="style.css">
-  
-  <!-- Preload Critical Assets -->
-  <link rel="preload" as="image" href="assets/sacred-symbol.png">
-  
-  <!-- Canonical URL -->
-  <link rel="canonical" href="https://gurbaniliveradio.com/">
+<!-- Non-render-blocking CSS -->
+<link rel="preload" href="style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="style.css"></noscript>
+  <!-- Optimized Google Fonts - Reduced weights, display=swap -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+Gurmukhi:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- Load Font Awesome asynchronously -->
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" onload="this.onload=null;this.rel='stylesheet'" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <noscript>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
+  </noscript>
   
   <!-- Structured Data -->
   <script type="application/ld+json">
@@ -110,120 +327,21 @@
   <!-- ═══════════════════════════════════════════════════════════════════════════
        COSMIC BACKGROUND - Animated Sacred Space
   ═══════════════════════════════════════════════════════════════════════════ -->
-  <div class="cosmic-bg" aria-hidden="true">
-    <!-- Base Gradient Mesh -->
-    <div class="cosmic-bg__mesh"></div>
-    
-    <!-- Aurora Borealis Effect -->
-    <div class="cosmic-bg__aurora">
-      <div class="aurora aurora--1"></div>
-      <div class="aurora aurora--2"></div>
-      <div class="aurora aurora--3"></div>
-    </div>
-    
-    <!-- Floating Orbs -->
-    <div class="cosmic-bg__orbs">
-      <div class="orb orb--golden"></div>
-      <div class="orb orb--purple"></div>
-      <div class="orb orb--blue"></div>
-    </div>
-    
-    <!-- Star Fields -->
-    <div class="cosmic-bg__stars">
-      <div class="star-field star-field--near"></div>
-      <div class="star-field star-field--mid"></div>
-      <div class="star-field star-field--far"></div>
-    </div>
-    
-    <!-- Divine Light Rays -->
-    <div class="cosmic-bg__divine-rays"></div>
-    
-    <!-- Sacred Geometry - Flower of Life -->
-    <div class="cosmic-bg__sacred-geometry">
-      <svg class="flower-of-life" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="sacred-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" style="stop-color:rgba(247,198,52,0.3)"/>
-            <stop offset="50%" style="stop-color:rgba(219,165,32,0.2)"/>
-            <stop offset="100%" style="stop-color:rgba(247,198,52,0.3)"/>
-          </linearGradient>
-        </defs>
-        <g fill="none" stroke="url(#sacred-gradient)" stroke-width="0.5">
-          <!-- Central Circle -->
-          <circle cx="100" cy="100" r="20"/>
-          <!-- Inner Ring of Circles -->
-          <circle cx="100" cy="80" r="20"/>
-          <circle cx="117.32" cy="90" r="20"/>
-          <circle cx="117.32" cy="110" r="20"/>
-          <circle cx="100" cy="120" r="20"/>
-          <circle cx="82.68" cy="110" r="20"/>
-          <circle cx="82.68" cy="90" r="20"/>
-          <!-- Outer Ring of Circles -->
-          <circle cx="100" cy="60" r="20"/>
-          <circle cx="134.64" cy="80" r="20"/>
-          <circle cx="134.64" cy="120" r="20"/>
-          <circle cx="100" cy="140" r="20"/>
-          <circle cx="65.36" cy="120" r="20"/>
-          <circle cx="65.36" cy="80" r="20"/>
-        </g>
-      </svg>
-    </div>
-    
-    <!-- Vignette Overlay -->
-    <div class="cosmic-bg__vignette"></div>
-    
-    <!-- Noise Texture -->
-    <div class="cosmic-bg__noise"></div>
-  </div>
-
+ <!-- Simplified Background - Static gradient only -->
+<div class="cosmic-bg" aria-hidden="true">
+  <div class="cosmic-bg__mesh"></div>
+  <div class="cosmic-bg__vignette"></div>
+</div>
   <!-- ═══════════════════════════════════════════════════════════════════════════
        LOADING SCREEN - Divine Entrance
   ═══════════════════════════════════════════════════════════════════════════ -->
-  <div class="loading-screen" id="loadingScreen" role="progressbar" aria-label="Loading application" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-    <div class="loader">
-      <!-- Animated Logo -->
-      <div class="loader__logo">
-        <div class="loader__khanda-container">
-          <!-- Spinning Rings -->
-          <div class="loader__outer-ring"></div>
-          <div class="loader__middle-ring"></div>
-          <div class="loader__inner-ring"></div>
-          
-          <!-- Core Symbol -->
-          <div class="loader__core">
-            <span class="loader__symbol">☬</span>
-          </div>
-          
-          <!-- Orbiting Particles -->
-          <div class="loader__particles">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Loading Text -->
-      <div class="loader__text">
-        <span class="loader__title">Gurbani Live Radio</span>
-        <span class="loader__subtitle">Connecting to the Divine</span>
-      </div>
-      
-      <!-- Progress Bar -->
-      <div class="loader__progress">
-        <div class="loader__progress-track">
-          <div class="loader__progress-fill"></div>
-          <div class="loader__progress-glow"></div>
-        </div>
-        <span class="loader__progress-text">Initializing Sacred Stream...</span>
-      </div>
-    </div>
+ <!-- Simplified Loading Screen - No animations on mobile -->
+<div class="loading-screen" id="loadingScreen" role="status" aria-label="Loading">
+  <div class="loader">
+    <span class="loader__symbol" aria-hidden="true">☬</span>
+    <span class="loader__title">Gurbani Live Radio</span>
   </div>
+</div>
 
   <!-- ═══════════════════════════════════════════════════════════════════════════
        MAIN APPLICATION
@@ -376,6 +494,8 @@
                   loading="eager"
                   width="200"
                   height="200"
+                  fetchpriority="high"
+                  decoding="async"
                   onerror="this.onerror=null; this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 text-anchor=%22middle%22 x=%2250%25%22>☬</text></svg>'"
                 >
                 
@@ -412,13 +532,13 @@
           
           <!-- Track Title -->
           <h2 class="track-info__title" id="trackTitle">
-            <span class="title-text">Live kirtan</span>
+            <span class="title-text">Live Kirtan</span>
           </h2>
           
           <!-- Artist/Source -->
           <p class="track-info__artist" id="trackArtist">
             <i class="fas fa-broadcast-tower" aria-hidden="true"></i>
-            <span>Live Kirtan from Amrtivela Smagam</span>
+            <span>Live Kirtan from Amritvela Smagam</span>
           </p>
           
           <!-- Mini Waveform (Active when playing) -->
@@ -726,7 +846,8 @@
         
         <div class="bento-card__shimmer"></div>
       </article>
-            <!-- Notes Card -->
+      
+      <!-- Notes Card -->
       <article class="bento-card bento-card--notes" id="notesCard" tabindex="0" role="button" aria-label="Open Notes">
         <div class="bento-card__bg"></div>
         <div class="bento-card__gradient"></div>
@@ -750,7 +871,8 @@
         
         <div class="bento-card__shimmer"></div>
       </article>
-            <!-- Random Shabad Card -->
+      
+      <!-- Random Shabad Card -->
       <article class="bento-card bento-card--shabad" id="randomShabadCard" tabindex="0" role="button" aria-label="Get Random Shabad">
         <div class="bento-card__bg"></div>
         <div class="bento-card__gradient"></div>
@@ -774,6 +896,7 @@
         
         <div class="bento-card__shimmer"></div>
       </article>
+      
       <!-- Gurpurab Calendar Card -->
       <article class="bento-card bento-card--calendar" tabindex="0" role="button" aria-label="View Gurpurab Calendar">
         <div class="bento-card__bg"></div>
@@ -861,7 +984,7 @@
           <i class="fas fa-share-nodes"></i>
         </div>
         <h2 class="modal__title" id="shareModalTitle">Share Station</h2>
-        <button class="modal__close" id="closeShareModal" data-close-modal aria-label="Close modal">
+        <button class="modal__close" id="closeShareModal" data-close-modal aria-label="Close modal" type="button">
           <i class="fas fa-xmark"></i>
         </button>
       </header>
@@ -870,17 +993,19 @@
       <div class="modal__body">
         <div class="share-options">
           <!-- WhatsApp -->
-        <button class="share-option share-option--whatsapp" id="shareWhatsapp" data-share="whatsapp" type="button">            <i class="fab fa-whatsapp"></i>
+          <button class="share-option share-option--whatsapp" id="shareWhatsapp" data-share="whatsapp" type="button">
+            <i class="fab fa-whatsapp"></i>
             <span>WhatsApp</span>
           </button>
           
           <!-- Telegram -->
-        <button class="share-option share-option--telegram" id="shareTelegram" data-share="telegram" type="button">            <i class="fab fa-telegram-plane"></i>
+          <button class="share-option share-option--telegram" id="shareTelegram" data-share="telegram" type="button">
+            <i class="fab fa-telegram-plane"></i>
             <span>Telegram</span>
           </button>
           
           <!-- Facebook -->
-         <button class="share-option share-option--facebook" id="shareFacebook" data-share="facebook" type="button">
+          <button class="share-option share-option--facebook" id="shareFacebook" data-share="facebook" type="button">
             <i class="fab fa-facebook-f"></i>
             <span>Facebook</span>
           </button>
@@ -920,7 +1045,7 @@
           <i class="far fa-clock"></i>
         </div>
         <h2 class="modal__title" id="scheduleModalTitle">Today's Schedule</h2>
-       <button class="modal__close" id="closeScheduleModal" data-close-modal aria-label="Close modal">
+        <button class="modal__close" id="closeScheduleModal" data-close-modal aria-label="Close modal" type="button">
           <i class="fas fa-xmark"></i>
         </button>
       </header>
@@ -989,6 +1114,7 @@
       </div>
     </div>
   </dialog>
+
   <!-- ═══════════════════════════════════════════════════════════════════════════
        NOTES MODAL
   ═══════════════════════════════════════════════════════════════════════════ -->
@@ -1004,11 +1130,42 @@
           <i class="fas fa-sticky-note"></i>
         </div>
         <h2 class="modal__title" id="notesModalTitle">My Notes</h2>
-        <button class="modal__close" id="closeNotesModal" data-close-modal aria-label="Close modal">
+        <button class="modal__close" id="closeNotesModal" data-close-modal aria-label="Close modal" type="button">
           <i class="fas fa-xmark"></i>
         </button>
       </header>
-        <!-- ═══════════════════════════════════════════════════════════════════════════
+      
+      <!-- Body -->
+      <div class="modal__body">
+        <div class="notes-container">
+          <textarea 
+            id="notesTextarea" 
+            class="notes-textarea" 
+            placeholder="Write your spiritual notes, reflections, or favorite shabads here..."
+            rows="8"
+          ></textarea>
+          
+          <div class="notes-actions">
+            <button class="notes-btn notes-btn--save" id="saveNotesBtn" type="button">
+              <i class="fas fa-save"></i>
+              <span>Save Notes</span>
+            </button>
+            <button class="notes-btn notes-btn--clear" id="clearNotesBtn" type="button">
+              <i class="fas fa-trash"></i>
+              <span>Clear</span>
+            </button>
+          </div>
+          
+          <p class="notes-hint">
+            <i class="fas fa-info-circle"></i>
+            Notes are saved locally on your device
+          </p>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════════
        RANDOM SHABAD MODAL
   ═══════════════════════════════════════════════════════════════════════════ -->
   <dialog class="modal modal--large" id="shabadModal" aria-labelledby="shabadModalTitle">
@@ -1023,7 +1180,7 @@
           <i class="fas fa-book-open"></i>
         </div>
         <h2 class="modal__title" id="shabadModalTitle">Random Shabad</h2>
-        <button class="modal__close" id="closeShabadModal" data-close-modal aria-label="Close modal">
+        <button class="modal__close" id="closeShabadModal" data-close-modal aria-label="Close modal" type="button">
           <i class="fas fa-xmark"></i>
         </button>
       </header>
@@ -1087,35 +1244,7 @@
       </div>
     </div>
   </dialog>
-      <!-- Body -->
-      <div class="modal__body">
-        <div class="notes-container">
-          <textarea 
-            id="notesTextarea" 
-            class="notes-textarea" 
-            placeholder="Write your spiritual notes, reflections, or favorite shabads here..."
-            rows="8"
-          ></textarea>
-          
-          <div class="notes-actions">
-            <button class="notes-btn notes-btn--save" id="saveNotesBtn" type="button">
-              <i class="fas fa-save"></i>
-              <span>Save Notes</span>
-            </button>
-            <button class="notes-btn notes-btn--clear" id="clearNotesBtn" type="button">
-              <i class="fas fa-trash"></i>
-              <span>Clear</span>
-            </button>
-          </div>
-          
-          <p class="notes-hint">
-            <i class="fas fa-info-circle"></i>
-            Notes are saved locally on your device
-          </p>
-        </div>
-      </div>
-    </div>
-  </dialog>
+
   <!-- ═══════════════════════════════════════════════════════════════════════════
        TOAST NOTIFICATION CONTAINER
   ═══════════════════════════════════════════════════════════════════════════ -->
@@ -1127,7 +1256,7 @@
       <span class="toast__title">Success</span>
       <span class="toast__message">Action completed successfully</span>
     </div>
-    <button class="toast__close" aria-label="Dismiss notification">
+    <button class="toast__close" aria-label="Dismiss notification" type="button">
       <i class="fas fa-xmark"></i>
     </button>
     <div class="toast__progress"></div>
@@ -1184,30 +1313,33 @@
   <div class="sr-only" aria-live="polite" id="srAnnouncements"></div>
 
   <!-- ═══════════════════════════════════════════════════════════════════════════
-       JAVASCRIPT
+       JAVASCRIPT - Loaded with defer for non-blocking
   ═══════════════════════════════════════════════════════════════════════════ -->
   <script src="script.js" defer></script>
   
-  <!-- Inline Critical JavaScript for Loading -->
+  <!-- CSS Loading Helper (for async font loading) -->
   <script>
-    // Immediately hide loading screen when content is ready
-    document.addEventListener('DOMContentLoaded', function() {
-      // Simulate minimum loading time for smooth experience
-      setTimeout(function() {
-        const loadingScreen = document.getElementById('loadingScreen');
-        if (loadingScreen) {
-          loadingScreen.classList.add('hidden');
+    // CSS preload polyfill for browsers that don't support onload on link[rel=preload]
+    (function(){
+      var links = document.querySelectorAll('link[rel="preload"][as="style"]');
+      links.forEach(function(link) {
+        if (link.onload === null) {
+          link.rel = 'stylesheet';
         }
-      }, 2500); // 2.5 seconds loading animation
-    });
-    
-    // Fallback - Hide after max 5 seconds regardless
-    setTimeout(function() {
-      const loadingScreen = document.getElementById('loadingScreen');
-      if (loadingScreen && !loadingScreen.classList.contains('hidden')) {
-        loadingScreen.classList.add('hidden');
-      }
-    }, 5000);
+      });
+    })();
   </script>
+  
+  <!-- Inline Critical JavaScript for Loading -->
+  <!-- Optimized Loading Script -->
+<script>
+  // Hide loading screen IMMEDIATELY when DOM is ready
+  document.addEventListener('DOMContentLoaded', function() {
+    var loadingScreen = document.getElementById('loadingScreen');
+    if (loadingScreen) {
+      loadingScreen.classList.add('hidden');
+    }
+  });
+</script>
 </body>
 </html>

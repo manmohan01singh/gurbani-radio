@@ -1093,19 +1093,18 @@ class VisualizerEngine {
         this.audioEngine.on('stopped', () => this.stop());
     }
 
-    start() {
-        // ═══ DISABLE ON MOBILE IF REDUCED MOTION ═══
-        if (this.isActive || shouldReduceAnimations) {
-            // On mobile, just set static bars
-            if (shouldReduceAnimations) {
-                this.setStaticBars();
-            }
-            return;
-        }
-        
-        this.isActive = true;
-        this.animate();
+start() {
+    // ═══ COMPLETELY DISABLE ON MOBILE ═══
+    if (isMobile || shouldReduceAnimations) {
+        // Don't animate anything on mobile
+        return;
     }
+    
+    if (this.isActive) return;
+    
+    this.isActive = true;
+    this.animate();
+}
 
     // ═══ NEW: Static bars for mobile (no animation, no lag!) ═══
     setStaticBars() {
@@ -1264,12 +1263,20 @@ class VisualizerEngine {
 
 class ParticleSystem {
     constructor(container, options = {}) {
-        this.container = typeof container === 'string' 
-            ? document.getElementById(container) 
-            : container;
-        
-        // ═══ MOBILE: Use fewer particles ═══
-        const particleCount = isMobile ? 8 : (options.count || 40);
+    // ═══ COMPLETELY DISABLE ON MOBILE ═══
+    if (isMobile || shouldReduceAnimations) {
+        console.log('[Particles] Disabled for mobile performance');
+        this.particles = [];
+        this.isActive = false;
+        return;
+    }
+    
+    this.container = typeof container === 'string' 
+        ? document.getElementById(container) 
+        : container;
+    
+    const particleCount = options.count || 40;
+   
         
         this.options = {
             count: particleCount,
@@ -2693,19 +2700,15 @@ From: Gurbani Live Radio
         }, duration);
     }
 
-    hideLoadingScreen() {
-        const { loadingScreen } = this.elements;
-        
-        if (loadingScreen) {
-            setTimeout(() => {
-                loadingScreen.classList.add('loading-screen--hidden');
-                
-                setTimeout(() => {
-                    loadingScreen.style.display = 'none';
-                }, 800);
-            }, 1500);
-        }
+hideLoadingScreen() {
+    const { loadingScreen } = this.elements;
+    
+    if (loadingScreen) {
+        // Immediately hide - no delay
+        loadingScreen.classList.add('hidden');
+        loadingScreen.style.display = 'none';
     }
+}
 
     destroy() {
         if (this.listenerUpdateInterval) {
