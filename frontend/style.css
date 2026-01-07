@@ -96,7 +96,7 @@
   
   /* Typography */
   --font-primary: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-display: 'Playfair Display', Georgia, serif;
+  --font-display: 'Playfair Display', Georgia, serif, swap;
   --font-gurmukhi: 'Noto Sans Gurmukhi', sans-serif;
   
   /* Fluid Scale */
@@ -4174,7 +4174,48 @@ html, body {
     transform: translateZ(0);    /* Use GPU */
     backface-visibility: hidden; /* Prevent flickering */
 }
+/* Add this at the END of your style.css */
 
+/* ═══════════════════════════════════════════════════════════════════════
+   FIX: Force Composited Animations (GPU accelerated)
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* These properties trigger GPU acceleration */
+.loader__outer-ring,
+.loader__middle-ring,
+.loader__inner-ring,
+.loader__symbol,
+.loader__progress-fill,
+.khanda-icon,
+.sacred-image,
+.viz-bar,
+.play-btn,
+.floating-particle,
+.aurora,
+.orb,
+.orbit-particle {
+    will-change: transform, opacity;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}
+
+/* On mobile, disable will-change to save memory */
+@media (max-width: 768px) {
+    .loader__outer-ring,
+    .loader__middle-ring,
+    .loader__inner-ring,
+    .loader__symbol,
+    .khanda-icon,
+    .sacred-image,
+    .viz-bar,
+    .floating-particle,
+    .aurora,
+    .orb,
+    .orbit-particle {
+        will-change: auto;
+        animation: none !important;
+    }
+}
 /* ═══════════════════════════════════════════════════════════════════════════
    MOBILE PERFORMANCE FIXES - ADD AT END OF style.css
    ═══════════════════════════════════════════════════════════════════════════ */
